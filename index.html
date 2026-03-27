@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swimming Coach — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:#0055FF;--blue-light:#EBF0FF;--blue-mid:#99B3FF;
+  --green:#059669;--green-light:#D1FAE5;
+  --amber:#D97706;--amber-light:#FEF3C7;
+  --red:#DC2626;--red-light:#FEE2E2;
+  --purple:#7C3AED;--purple-light:#EDE9FE;
+  --gray-light:#F3F4F6;--border:#E5E7EB;
+  --bg:#F0F2F8;--card:#FFFFFF;--text:#111827;--muted:#6B7280;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;}
+.topbar{background:var(--blue);color:white;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-title{font-size:15px;font-weight:600;}
+.goal-badge{background:rgba(255,255,255,.2);border-radius:20px;padding:3px 10px;font-family:var(--mono);font-size:11px;}
+.tabs{display:flex;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;position:sticky;top:46px;z-index:99;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:12px 16px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab:hover:not(.active){color:var(--text);background:var(--gray-light);}
+.content{padding:1rem;max-width:560px;margin:0 auto;}
+.pane{display:none;}.pane.active{display:block;}
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border);margin-bottom:1rem;overflow:hidden;}
+.card-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:14px;font-weight:600;}
+.card-sub{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.card-body{padding:12px 14px;}
+.kpi-row{display:grid;gap:8px;margin-bottom:1rem;}
+.kpi-row.cols3{grid-template-columns:repeat(3,1fr);}
+.kpi-row.cols4{grid-template-columns:repeat(4,1fr);}
+.kpi{border-radius:10px;padding:10px 8px;text-align:center;}
+.kpi.blue{background:var(--blue-light);}.kpi.green{background:var(--green-light);}.kpi.amber{background:var(--amber-light);}.kpi.purple{background:var(--purple-light);}
+.kpi-label{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;}
+.kpi.blue .kpi-label{color:var(--blue);}.kpi.green .kpi-label{color:var(--green);}.kpi.amber .kpi-label{color:var(--amber);}.kpi.purple .kpi-label{color:var(--purple);}
+.kpi-value{font-size:17px;font-weight:600;margin-top:2px;}
+.kpi.blue .kpi-value{color:var(--blue);}.kpi.green .kpi-value{color:var(--green);}.kpi.amber .kpi-value{color:var(--amber);}.kpi.purple .kpi-value{color:var(--purple);}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+.dash-progress{background:var(--card);border-radius:12px;border:1px solid var(--border);margin-bottom:1rem;overflow:hidden;}
+.dash-progress-header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.dash-progress-title{font-size:13px;font-weight:600;}
+.mini-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+.mini-stat{text-align:center;padding:8px 4px;background:var(--gray-light);border-radius:8px;}
+.mini-stat-label{font-size:10px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+.mini-stat-value{font-size:14px;font-weight:600;color:var(--text);}
+.mini-stat-trend{font-size:10px;margin-top:1px;}
+.trend-good{color:var(--green);}.trend-warn{color:var(--amber);}
+.mini-chart-wrap{position:relative;width:100%;height:110px;}
+.past-session-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .15s;}
+.past-session-row:last-child{border-bottom:none;}.past-session-row:hover{opacity:.75;}
+.ps-date{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:3px 8px;white-space:nowrap;flex-shrink:0;}
+.ps-info{flex:1;}.ps-name{font-size:12px;font-weight:500;}.ps-stats{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:1px;}
+.ps-arrow{font-size:12px;color:var(--blue);}
+.week-nav{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.week-nav button,.week-switcher button{background:var(--gray-light);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:var(--sans);color:var(--text);transition:background .15s;}
+.week-nav button:hover,.week-switcher button:hover{background:var(--border);}
+.week-nav button:disabled,.week-switcher button:disabled{opacity:.35;cursor:default;}
+.week-label{font-size:13px;font-weight:500;font-family:var(--mono);}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day{border-radius:8px;padding:6px 4px;text-align:center;min-height:64px;border:1px solid var(--border);background:var(--card);transition:transform .1s,box-shadow .1s;}
+.cal-day.clickable{cursor:pointer;}.cal-day.clickable:hover{transform:scale(1.04);box-shadow:0 2px 8px rgba(0,0,0,.1);}.cal-day.clickable:active{transform:scale(.97);}
+.cal-day.rest{background:var(--gray-light);opacity:.6;}
+.cal-day.gym-mon{background:#D1FAE5;border-color:#6EE7B7;}.cal-day.gym-thu{background:#FEF3C7;border-color:#FCD34D;}
+.cal-day.pool-coach{background:var(--purple-light);border-color:#C4B5FD;}.cal-day.pool-you{background:var(--blue-light);border-color:var(--blue-mid);}
+.cal-day.today{box-shadow:0 0 0 2px var(--blue);}
+.cal-day-name{font-size:9px;font-family:var(--mono);text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.cal-day-num{font-size:14px;font-weight:600;margin-bottom:4px;}
+.cal-day-tag{font-size:9px;font-weight:500;border-radius:4px;padding:2px 4px;line-height:1.3;}
+.gym-mon .cal-day-tag{background:#6EE7B7;color:#065F46;}.gym-thu .cal-day-tag{background:#FCD34D;color:#78350F;}
+.pool-coach .cal-day-tag{background:#C4B5FD;color:#4C1D95;}.pool-you .cal-day-tag{background:var(--blue-mid);color:#1E3A8A;}
+.cal-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.session-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.session-item:last-child{border-bottom:none;}.session-item:hover{opacity:.8;}
+.session-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.session-icon.pool{background:var(--blue-light);}.session-icon.gym-mon{background:var(--green-light);}.session-icon.gym-thu{background:var(--amber-light);}
+.session-info{flex:1;}.session-name{font-size:13px;font-weight:500;}.session-meta{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:1px;}
+.session-arrow{font-size:13px;color:var(--blue);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{padding:8px 10px;text-align:left;font-size:10px;font-weight:500;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--border);background:var(--gray-light);}
+td{padding:9px 10px;vertical-align:top;border-bottom:1px solid var(--border);line-height:1.5;}
+tr:last-child td{border-bottom:none;}tr:nth-child(even) td{background:#FAFAFA;}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:500;border-radius:5px;padding:2px 6px;white-space:nowrap;}
+.badge.blue{background:var(--blue-light);color:var(--blue);}.badge.green{background:var(--green-light);color:#065F46;}.badge.amber{background:var(--amber-light);color:#92400E;}.badge.gray{background:var(--gray-light);color:#374151;}.badge.purple{background:var(--purple-light);color:#4C1D95;}
+.focus-box{border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:1rem;font-size:12px;line-height:1.6;}
+.focus-box.blue{background:var(--blue-light);color:#1E3A6E;border-color:var(--blue);}
+.focus-box.green{background:var(--green-light);color:#064E3B;border-color:var(--green);}
+.focus-box.amber{background:var(--amber-light);color:#78350F;border-color:var(--amber);}
+.phase-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:1rem;}
+.phase-block{border-radius:8px;padding:10px 8px;text-align:center;border:1px solid var(--border);}
+.phase-block.active{border-color:var(--blue);background:var(--blue-light);}
+.phase-num{font-family:var(--mono);font-size:10px;color:var(--muted);}.phase-block.active .phase-num{color:var(--blue);}
+.phase-name{font-size:12px;font-weight:500;margin-top:2px;}.phase-months{font-size:10px;color:var(--muted);margin-top:2px;}
+.progress-track{background:var(--gray-light);border-radius:20px;height:8px;margin:6px 0;overflow:hidden;}
+.progress-fill{height:100%;border-radius:20px;background:var(--blue);}
+.chart-wrap{position:relative;width:100%;height:200px;margin:8px 0;}
+.section-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:1.25rem 0 6px;}
+a.yt{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-family:var(--mono);color:var(--blue);text-decoration:none;background:var(--blue-light);padding:2px 7px;border-radius:5px;margin-top:5px;}
+.note{font-size:11px;color:var(--muted);margin-top:3px;}
+.cue{font-size:11px;color:var(--blue);margin-top:3px;font-style:italic;}.cue.green{color:var(--green);}.cue.amber{color:var(--amber);}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:flex-end;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-height:88vh;overflow-y:auto;padding:0 0 2rem;}
+.modal-handle-bar{padding:12px 0 8px;display:flex;justify-content:center;}.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;}
+.modal-header{padding:0 14px 12px;border-bottom:1px solid var(--border);}
+.modal-date{font-family:var(--mono);font-size:11px;color:var(--blue);margin-bottom:3px;}
+.modal-title{font-size:17px;font-weight:600;}
+.modal-close{float:right;background:var(--gray-light);border:none;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:var(--sans);margin-top:-2px;}
+.modal-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 14px;border-bottom:1px solid var(--border);}
+.modal-kpi{background:var(--gray-light);border-radius:8px;padding:8px;text-align:center;}
+.modal-kpi-label{font-size:10px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.modal-kpi-value{font-size:16px;font-weight:600;color:var(--text);margin-top:2px;}
+.modal-section{padding:12px 14px;}
+.modal-section-title{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;}
+.drills-box{background:var(--purple-light);border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.6;color:#4C1D95;}
+.laps-table{width:100%;border-collapse:collapse;font-size:12px;}
+.laps-table th{padding:7px 6px;font-size:10px;font-weight:500;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);background:var(--gray-light);text-align:right;}
+.laps-table th:first-child,.laps-table th:nth-child(2){text-align:left;}
+.laps-table td{padding:8px 6px;border-bottom:1px solid var(--border);text-align:right;font-family:var(--mono);font-size:12px;}
+.laps-table td:first-child{text-align:left;font-family:var(--sans);font-weight:500;font-size:12px;}
+.laps-table td:nth-child(2){text-align:left;}
+.laps-table tr:last-child td{border-bottom:none;}.laps-table tr:nth-child(even) td{background:#FAFAFA;}
+.laps-table .avg-row td{background:var(--blue-light);font-weight:500;color:var(--blue);border-top:1px solid var(--blue-mid);}
+.laps-table .avg-row td:first-child,.laps-table .avg-row td:nth-child(2){color:var(--blue);}
+.dist-badge{display:inline-block;font-family:var(--mono);font-size:10px;border-radius:4px;padding:1px 5px;background:var(--gray-light);color:var(--muted);}
+.dist-badge.d50{background:#EFF6FF;color:#1D4ED8;}.dist-badge.d100{background:#F0FDF4;color:#166534;}.dist-badge.d150{background:#FFF7ED;color:#9A3412;}.dist-badge.d200{background:#FDF4FF;color:#6B21A8;}.dist-badge.d300{background:#FFF1F2;color:#9F1239;}
+.sw-good{color:var(--green);}.sw-ok{color:var(--amber);}.sw-high{color:var(--red);}
+.week-switcher{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:1rem;margin-top:.5rem;}
+.ws-label{font-size:12px;font-weight:500;font-family:var(--mono);color:var(--text);}
+.wt-ref{font-size:10px;font-family:var(--mono);background:var(--gray-light);color:#374151;border-radius:4px;padding:2px 6px;display:inline-block;margin-top:5px;}
+.wt-now{font-size:10px;font-family:var(--mono);background:#D1FAE5;color:#065F46;border-radius:4px;padding:2px 6px;display:inline-block;margin-top:5px;}
+footer{text-align:center;font-size:11px;color:var(--muted);font-family:var(--mono);padding:1.5rem 0 3rem;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">🏊 Swimming Coach</div>
+  <div class="goal-badge">Goal: sub 7:30 · Baseline: 7:45</div>
+</div>
+<div class="tabs" id="tabs"></div>
+
+<!-- SESSION DETAIL MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <div class="modal-handle-bar"><div class="modal-handle"></div></div>
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModalDirect()">✕ Close</button>
+      <div class="modal-date" id="modal-date"></div>
+      <div class="modal-title" id="modal-title"></div>
+    </div>
+    <div class="modal-kpi-row" id="modal-kpis"></div>
+    <div class="modal-section" id="modal-summary-section">
+      <div id="modal-summary" style="font-size:13px;line-height:1.65;color:var(--text);padding:2px 0 4px;"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Drills &amp; warm-up</div>
+      <div class="drills-box" id="modal-drills"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Training laps</div>
+      <div id="modal-laps"></div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div id="pane-dashboard" class="pane active"></div>
+  <div id="pane-calendar" class="pane"></div>
+  <div id="pane-pool" class="pane"></div>
+  <div id="pane-gym" class="pane"></div>
+  <div id="pane-progress" class="pane"></div>
+  <div id="pane-plan" class="pane"></div>
+</div>
+<footer>Swimming Coach App · Phase 1 of 4 · Sub 7:30 by end of year</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ╔═══════════════════════════════════════════════════════════════╗
+// ║  SINGLE DATA OBJECT — edit ONLY this section to update app  ║
+// ╚═══════════════════════════════════════════════════════════════╝
+
+const DATA = {
+  // Pin "today" to training timeline (month is 0-indexed)
+  today: new Date(2025, 2, 28), // 28 Mar 2025
+
+  goal: { baseline: '7:45', target: '7:30', phase: 1, totalPhases: 4 },
+
+  // ── SWIM SESSIONS (training laps only — drills/warm-up/cool-down excluded) ──
+  sessions: [
+    {
+      date:'2025-02-13', label:'13 Feb', lapCount:10, distance:'1,000m',
+      avgSwolf:82.1, avgStrokes:26.6, avgHR:151, tag:'mixed distances',
+      summary:'Mixed distance session — descending from 150m down to 50m repeats. Main set was 4 longer intervals (150–200m) followed by 6 × 50m. Early laps showed stroke count creeping to 28–29 on longer distances, improving to 25 on the 50s. Fatigue visible in the longer sets.',
+      drills:'🏃 Warm-up block (Interval 1) — 250m mixed: push-off sprint (1:09), 2 build laps (1:05, 1:18), transition lap (0:45), very long rest (4:39), fast finish (0:21). Total ~10 min. Warm-up excluded from lap stats.\n\n❄️ Cool-down (Interval 12) — 2 × 50m very slow (1:21, 1:41). Swolf 114–129. HR falling. Excluded from lap stats.',
+      laps:[
+        {n:1,dist:150,t:'2:56.9',sw:85,st:26,hr:149},{n:2,dist:200,t:'3:53.4',sw:87,st:28,hr:151},
+        {n:3,dist:200,t:'3:57.7',sw:88,st:29,hr:153},{n:4,dist:150,t:'3:00.6',sw:89,st:29,hr:154},
+        {n:5,dist:50,t:'0:51.7',sw:76,st:24,hr:137},{n:6,dist:50,t:'0:54.1',sw:81,st:27,hr:152},
+        {n:7,dist:50,t:'0:53.5',sw:80,st:26,hr:142},{n:8,dist:50,t:'0:52.7',sw:78,st:25,hr:160},
+        {n:9,dist:50,t:'0:52.3',sw:77,st:25,hr:159},{n:10,dist:50,t:'0:52.1',sw:80,st:28,hr:157},
+      ]
+    },
+    {
+      date:'2025-02-20', label:'20 Feb', lapCount:9, distance:'900m',
+      avgSwolf:81.1, avgStrokes:26.4, avgHR:157, tag:'mixed distances',
+      summary:'Best average Swolf session so far (81.1). Descending distance structure — 300m, 200m, 100m then 6 × 50m. Longer intervals showed 27–28 strokes, improving to 78 Swolf on the final 50m. HR ran high (157 avg) — strong effort across all intervals.',
+      drills:'🏃 Warm-up block (Interval 1) — 500m mixed: fast push-off (30s), sprint (17s), build laps, moderate laps, very long rest (5:36), 2 final laps. Total ~13 min. Excluded from lap stats.\n\n🔧 Drills (Intervals 2–3) — 2 × 50m after warm-up: Swolf 81, strokes 23–24. Low-intensity technique laps. Excluded from main set stats.\n\n❄️ Cool-down (Interval 13) — 3 laps mixed (1:01, sprint 24s, 1:26). Excluded from lap stats.',
+      laps:[
+        {n:1,dist:300,t:'5:50.9',sw:86,st:28,hr:149},{n:2,dist:200,t:'3:52.9',sw:86,st:28,hr:151},
+        {n:3,dist:100,t:'1:50.1',sw:82,st:27,hr:155},{n:4,dist:50,t:'0:53.2',sw:77,st:24,hr:137},
+        {n:5,dist:50,t:'0:54.6',sw:81,st:26,hr:161},{n:6,dist:50,t:'0:54.2',sw:81,st:27,hr:163},
+        {n:7,dist:50,t:'0:53.8',sw:80,st:26,hr:165},{n:8,dist:50,t:'0:53.0',sw:79,st:26,hr:166},
+        {n:9,dist:50,t:'0:52.0',sw:78,st:26,hr:169},
+      ]
+    },
+    {
+      date:'2025-03-11', label:'11 Mar', lapCount:11, distance:'600m',
+      avgSwolf:81.7, avgStrokes:24.5, avgHR:156, tag:'1×100m + 10×50m',
+      summary:'Best strokes session — 24.5 average, opening 100m at only 18 strokes (personal best). Structured drill block included kick board and pull buoy. Main set: 1 × 100m opener then 10 × 50m. Technique held well but Swolf crept up toward the end of the 50m block.',
+      drills:'🏃 Warm-up block (Interval 1) — 250m mixed: fast push-off (20s), 2 build laps, moderate lap. Total ~5 min. Excluded from lap stats.\n\n🔧 Drill block (Intervals 2–6) — ~350m dedicated drills: Intervals 3 and 5 show Swolf 38–39 (kick board or pull-buoy drills), Intervals 2, 4, 6 show very low stroke counts (7–19 strokes). All excluded from lap stats.',
+      laps:[
+        {n:1,dist:100,t:'1:46.6',sw:71,st:18,hr:153},{n:2,dist:50,t:'0:52.3',sw:75,st:23,hr:146},
+        {n:3,dist:50,t:'0:54.1',sw:79,st:25,hr:156},{n:4,dist:50,t:'0:54.7',sw:80,st:25,hr:158},
+        {n:5,dist:50,t:'0:59.0',sw:86,st:27,hr:167},{n:6,dist:50,t:'0:58.5',sw:85,st:27,hr:164},
+        {n:7,dist:50,t:'0:59.0',sw:85,st:26,hr:165},{n:8,dist:50,t:'0:56.6',sw:81,st:24,hr:141},
+        {n:9,dist:50,t:'0:59.0',sw:83,st:24,hr:152},{n:10,dist:50,t:'1:00.9',sw:85,st:24,hr:157},
+        {n:11,dist:50,t:'1:03.0',sw:89,st:26,hr:158},
+      ]
+    },
+    {
+      date:'2025-03-13', label:'13 Mar', lapCount:6, distance:'600m',
+      avgSwolf:84.5, avgStrokes:26.8, avgHR:150, tag:'6×100m',
+      summary:'Clean 6 × 100m main set. Most consistent session structurally — stroke count steady at 26–27 throughout with no significant degradation. Lower HR (150 avg) than previous sessions. Swolf stayed in the 82–86 range across all laps.',
+      drills:'🏃 Warm-up/drill block (Interval 1) — 700m comprehensive mixed block: 14 lengths with multiple rest intervals, sprint push-offs (30–37s), moderate laps, build laps, long rests (28–110s). Full technique warm-up ~22 min. Excluded from lap stats.\n\n❄️ Fatigue set (Interval 8) — 2 × 50m very slow (1:17, 1:41). Swolf 110–128. Exhaustion laps at session end. Excluded from lap stats.',
+      laps:[
+        {n:1,dist:100,t:'1:55.8',sw:85,st:27,hr:135},{n:2,dist:100,t:'1:53.4',sw:84,st:27,hr:123},
+        {n:3,dist:100,t:'1:57.4',sw:86,st:27,hr:157},{n:4,dist:100,t:'1:53.3',sw:82,st:26,hr:158},
+        {n:5,dist:100,t:'1:58.2',sw:86,st:27,hr:165},{n:6,dist:100,t:'1:54.8',sw:84,st:27,hr:163},
+      ]
+    },
+    {
+      date:'2025-03-21', label:'21 Mar', lapCount:5, distance:'500m',
+      avgSwolf:85.6, avgStrokes:25.4, avgHR:145, tag:'5×100m',
+      summary:'Breakthrough session. First time correct catch angle was clearly felt — pushing backward not downward immediately flattened body position and stopped the legs sinking. Drills with fingertip drag and fist drill felt significantly better than before. Main set 5 × 100m: lap 1 excellent (Swolf 79, 24 strokes — personal best), technique held for 4 laps then broke on lap 5. Technique fatigue, not fitness.',
+      drills:'🏃 Warm-up + full drill block (Interval 1) — ~1,850m mixed block over 38 min. Embedded push-offs, drill sets, rests and build laps. Garmin logged as one long interval — individual drill data unreliable.\n\n💡 Key feeling: correct catch angle naturally flattened body position. Legs stopped sinking.\n\n❄️ Cool-down (Interval 7) — 2 × 50m very slow. Swolf 103. Excluded from lap stats.',
+      laps:[
+        {n:1,dist:100,t:'1:51.8',sw:79,st:24,hr:139},{n:2,dist:100,t:'1:58.3',sw:85,st:26,hr:150},
+        {n:3,dist:100,t:'2:00.6',sw:86,st:26,hr:147},{n:4,dist:100,t:'2:01.6',sw:87,st:26,hr:147},
+        {n:5,dist:100,t:'2:09.9',sw:91,st:26,hr:143},
+      ]
+    },
+    {
+      date:'2025-03-26', label:'26 Mar', lapCount:8, distance:'400m',
+      avgSwolf:76.9, avgStrokes:22.8, avgHR:148, tag:'8×50m (Wed extra)',
+      summary:'Unexpected Wednesday session — technique transfer confirmed. 8 × 50m main set with all laps between Swolf 75–79, smashing the <82 target. Stroke count held at 22–23 throughout — first time consistently below 23. Pattern from drills transferred cleanly to the main set. HR crept high on laps 3 and 7–8 (152–161) but technique didn\'t break. Only 8 of 10 planned reps completed. Cool-down 2 × 50m showed expected fatigue (Swolf 104–109).',
+      drills:'🏃 Warm-up + full drill block (Interval 1) — 850m over 22:38. 24 sub-laps: 12 swim lengths + 12 rest/drill segments. Included fingertip drag, fist drill, and pull finish pause sequences. Notable sub-laps: 1.10 (Swolf 57, 15 strokes — excellent drill rep), 1.16–1.19 (very fast push-off/sprint reps, Swolf 19–36). Full block excluded from training lap stats.\n\n❄️ Cool-down (Interval 10) — 2 × 50m slow: 1:17.8 + 1:19.6, Swolf 109/104. HR 144–149. Normal fatigue cool-down. Excluded from lap stats.',
+      laps:[
+        {n:1,dist:50,t:'0:52.6',sw:75,st:22,hr:136},{n:2,dist:50,t:'0:52.6',sw:75,st:22,hr:148},
+        {n:3,dist:50,t:'0:54.7',sw:78,st:23,hr:152},{n:4,dist:50,t:'0:52.6',sw:76,st:23,hr:143},
+        {n:5,dist:50,t:'0:54.1',sw:77,st:23,hr:144},{n:6,dist:50,t:'0:54.1',sw:77,st:23,hr:147},
+        {n:7,dist:50,t:'0:54.8',sw:78,st:23,hr:161},{n:8,dist:50,t:'0:56.2',sw:79,st:23,hr:149},
+      ]
+    },
+    {
+      date:'2025-03-28', label:'28 Mar', lapCount:10, distance:'500m',
+      avgSwolf:76.9, avgStrokes:22.6, avgHR:150, tag:'10×50m',
+      summary:'Pool Session B completed — all 10 planned reps executed. Swolf held 74–78 throughout, every lap under the <80 target. Best lap: Lap 3 (Swolf 74, 21 strokes — personal best strokes). Strokes 21–22 for first 6 laps, creeping to 23–25 with fatigue on laps 7–10. HR steady at avg 150. Pattern from Wednesday confirmed and sustained across the full planned set for the first time.',
+      drills:'🏃 Warm-up + drill block (Interval 1) — 1,000m over 22:37. 20 sub-laps with varied intensities: push-off sprints, build laps, drill sets and rest intervals. Full fingertip drag and fist drill block included. Excluded from lap stats.\n\n❄️ Cool-down (Interval 12) — 200m mixed: 3 moderate laps (0:30–0:34) + 1 slow cool-down (1:23, Swolf 108). HR 148–155. Normal fatigue. Excluded from lap stats.',
+      laps:[
+        {n:1,dist:50,t:'0:53.9',sw:76,st:22,hr:133},{n:2,dist:50,t:'0:53.7',sw:76,st:22,hr:140},
+        {n:3,dist:50,t:'0:53.3',sw:74,st:21,hr:152},{n:4,dist:50,t:'0:55.7',sw:78,st:22,hr:151},
+        {n:5,dist:50,t:'0:55.6',sw:78,st:22,hr:155},{n:6,dist:50,t:'0:53.9',sw:77,st:23,hr:152},
+        {n:7,dist:50,t:'0:55.3',sw:78,st:23,hr:157},{n:8,dist:50,t:'0:55.0',sw:78,st:23,hr:155},
+        {n:9,dist:50,t:'0:52.7',sw:76,st:23,hr:155},{n:10,dist:50,t:'0:53.1',sw:78,st:25,hr:151},
+      ]
+    },
+  ],
+
+  // ── POOL SESSION CARDS (plan + results) ──
+  poolWeeks: [
+    {
+      id:'pool-a', week:1, title:'Pool Session A', date:'21 Mar', status:'done',
+      kpis:[{l:'Total',v:'~900m'},{l:'Best Swolf',v:'79'},{l:'Best lap',v:'1:51.8'},{l:'Tech held',v:'4/5'}],
+      focusResult:'✅ <strong>Session result:</strong> Drills felt great — clear sense of moving forward not upward. Key breakthrough: correct catch angle flattens body position automatically. Legs stopped sinking. Technique held for 4 × 100m then broke on lap 5.',
+      coachNote:'🧠 <strong>Coach note:</strong> Swolf 79 on lap 1 is your best trained lap ever. Technique held well for 400m then fatigued on lap 5. New movement pattern is neuromuscularly expensive — this is normal at Week 1. Next session: shorter intervals to groove the pattern with more reps.',
+      sections:[
+        {label:'Warm-up + Drills · Interval 1 · ~38 min', type:'simple-table', headers:['Block','Notes'], rows:[['<strong>Warm-up + full drill block</strong>','Garmin logged as one long mixed interval — push-offs, rests, drill sets embedded. Data unreliable for individual analysis.<div class="note">Felt good. Fingertip drag and fist drill both working well.</div>']]},
+        {label:'Main set · 5 × 100m', type:'results-table', headers:['Lap','Time','Swolf','Strokes/50m','HR'], rows:[['1','1:51.8',{v:'79',c:'green'},'24','139–148'],['2','1:58.3',{v:'85',c:'amber'},'25–26','150–155'],['3','2:00.6',{v:'86',c:'amber'},'25–27','147–157'],['4','2:01.6',{v:'87',c:'amber'},'25–27','147–155'],['5','2:09.9',{v:'91',c:'red'},'26','143–152']]},
+        {label:'Cool-down · 1 × 100m', type:'simple-table', headers:['Lap','Time','Swolf','Notes'], rows:[['Cool-down','2:27.5','103','Easy recovery. High Swolf expected — fatigue + deliberate slow pace.']]},
+      ],
+    },
+    {
+      id:'pool-b', week:2, title:'Pool Session B', date:'28 Mar', status:'done',
+      kpis:[{l:'Total',v:'~1,700m'},{l:'Best Swolf',v:'74'},{l:'Best lap',v:'0:52.7'},{l:'Reps done',v:'10/10'}],
+      focusResult:'✅ <strong>Session result:</strong> All 10 reps completed — every lap Swolf 74–78, all under the &lt;80 target. Best lap Swolf 74 (Lap 3, 21 strokes). Strokes held 21–22 for first 6 laps, crept to 23–25 with fatigue. Pattern from Wednesday confirmed and sustained across the full planned set.',
+      coachNote:'🧠 <strong>Coach note:</strong> Two sessions in a row at avg Swolf 76.9. Week 3 moves to 75m or 100m reps as planned.',
+      sections:[
+        {label:'Warm-up + Drills · Interval 1 · 1,000m · 22:37', type:'simple-table', headers:['Block','Notes'], rows:[['<strong>Warm-up + full drill block</strong>','1,000m over 22:37. 20 sub-laps: push-off sprints, build laps, rest intervals, drill sets (fingertip drag + fist drill). Full block excluded from lap stats.']]},
+        {label:'Main set · 10 × 50m', type:'results-table', headers:['Lap','Time','Swolf','Strokes/50m','HR'], rows:[
+          ['1','0:53.9',{v:'76',c:'green'},'22','133'],
+          ['2','0:53.7',{v:'76',c:'green'},'22','140'],
+          ['3','0:53.3',{v:'74',c:'green'},'21','152'],
+          ['4','0:55.7',{v:'78',c:'green'},'22','151'],
+          ['5','0:55.6',{v:'78',c:'green'},'22','155'],
+          ['6','0:53.9',{v:'77',c:'green'},'23','152'],
+          ['7','0:55.3',{v:'78',c:'green'},'23','157'],
+          ['8','0:55.0',{v:'78',c:'green'},'23','155'],
+          ['9','0:52.7',{v:'76',c:'green'},'23','155'],
+          ['10','0:53.1',{v:'78',c:'green'},'25','151'],
+        ]},
+        {label:'Cool-down · 200m', type:'simple-table', headers:['Lap','Time','Swolf','Notes'], rows:[['Cool-down mixed','2:55.7','54 avg','3 moderate laps (0:30–0:34) + 1 very slow (1:23, Swolf 108). Normal fatigue pattern.']]},
+      ],
+    },
+    {
+      id:'pool-c', week:3, title:'Pool Session C', date:'11 Apr', status:'planned',
+      kpis:[{l:'Total',v:'TBD'},{l:'Strokes',v:'TBD'},{l:'HR',v:'TBD'},{l:'Swolf',v:'TBD'}],
+      focusPlan:'📋 Planned after your Week 2 feedback on 28 Mar. Structure will build on whatever worked in the 10 × 50m session.',
+      sections:[],
+    },
+  ],
+
+  // ── GYM WEEK CARDS ──
+  // Each gym week has a monday (strength) and thursday (stability) session
+  // exercises have: name, note, sets, cue, video, weights:{last,today}
+  gymWeeks: [
+    {
+      week:1, monDate:'17 Mar', thuDate:'20 Mar', status:'done',
+      monExercises: {
+        warmup:[
+          {name:'Band pull-aparts',sets:'3 × 20',cue:'Arms straight, pull to chest. Squeeze shoulder blades at end range.',video:'band+pull+apart+shoulder'},
+          {name:'Scapular wall slides',sets:'3 × 15',cue:'Back flat on wall, goalpost arms. Slide overhead keeping elbows and wrists on wall.',video:'scapular+wall+slides'},
+        ],
+        main:[
+          {name:'Single-arm cable row',note:'High pulley · face height',sets:'4 × 12',cue:'Elbow HIGH, drives straight back — this is your EVF catch.<div class="cue green">Feel forearm pressure? That\'s what we want in water.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{ref:'ref Thu: 7.5 kg',today:'10.125 kg'}},
+          {name:'Prone dumbbell row',note:'Face down on incline bench',sets:'4 × 10',cue:'Elbow straight back, tight to body. Mimics the full pull under load.<div class="cue green">No elbow flare. Hand tracks under body centreline.</div>',video:'prone+incline+dumbbell+row'},
+          {name:'Lat pulldown',note:'Wide grip',sets:'4 × 10',cue:'Pull to upper chest, elbows drive down and back.<div class="cue green">Chest tall, slight lean back — no collapsing forward.</div>',video:'lat+pulldown+proper+form'},
+          {name:'Pallof press',note:'Each side',sets:'3 × 12',cue:'Cable at chest height. Resist rotation — stops your hand going wide.<div class="cue green">Hand under body, not drifting wide.</div>',video:'pallof+press+core+tutorial'},
+        ],
+        finisher:[
+          {name:'Dead hang',note:'Bar hang, passive',sets:'3 × 30 sec',cue:'Simply hang. Decompresses the shoulder after all the pulling work.',video:'dead+hang+shoulder+decompression'},
+        ],
+      },
+      thuExercises: {
+        warmup:[
+          {name:'Arm circles + cross-body swings',sets:'2 × 20',cue:'Slow, controlled. Loosen the shoulder capsule. Both directions.',video:'arm+circles+shoulder+warmup'},
+          {name:'Band pull-aparts',sets:'2 × 20',cue:'Lighter band than Monday. Focus on the squeeze at end range.',video:'band+pull+apart+shoulder'},
+        ],
+        main:[
+          {name:'TRX / ring fallout',sets:'3 × 10',cue:'Anterior shoulder stability — holds elbow up against water resistance.<div class="cue amber">The harder this feels, the more you need it.</div>',video:'TRX+fallout+exercise'},
+          {name:'Face pulls',note:'Cable · rope attachment',sets:'3 × 15',cue:'Pull rope to face, elbows high and wide. Trains rotator cuff in EVF position.<div class="cue amber">Elbows finish ABOVE the hands. Every rep.</div>',video:'face+pulls+cable+rotator+cuff',weights:{done:'✓ 19 Mar: 5 kg'}},
+          {name:'Single-arm cable row',note:'20–30% lighter than Monday',sets:'3 × 12',cue:'Perfect elbow position — no compensating with the shoulder.<div class="cue amber">Quality over load today.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{done:'✓ 19 Mar: 7.5 kg'}},
+          {name:'Side-lying external rotation',note:'Dumbbell · each side',sets:'3 × 15',cue:'Lie on side, elbow at 90°. Rotate dumbbell upward slowly.<div class="cue amber">Light weight. Slow and controlled. Never rush this one.</div>',video:'side+lying+external+rotation+rotator+cuff',weights:{done:'✓ 19 Mar: 3 kg'}},
+        ],
+        finisher:[
+          {name:'Plank to downward dog',sets:'3 × 10',cue:'From plank, push hips up slowly. Shoulders packed — no shrugging.',video:'plank+to+downward+dog+exercise'},
+          {name:'Doorway chest stretch',sets:'3 × 30 sec',cue:'Arms at 90° in doorframe, lean gently. Counteracts forward shoulder posture.',video:'doorway+chest+stretch+swimmer'},
+        ],
+      },
+    },
+    {
+      week:2, monDate:'24 Mar', thuDate:'27 Mar', status:'current',
+      monExercises: {
+        warmup:[
+          {name:'Band pull-aparts',sets:'3 × 20',cue:'Arms straight, pull to chest. Squeeze shoulder blades at end range.',video:'band+pull+apart+shoulder'},
+          {name:'Scapular wall slides',sets:'3 × 15',cue:'Back flat on wall, goalpost arms. Elbows and wrists stay on wall throughout.',video:'scapular+wall+slides'},
+        ],
+        main:[
+          {name:'Single-arm cable row',note:'High pulley · face height',sets:'4 × 12',cue:'Elbow HIGH, drives straight back.<div class="cue green">First tracked Monday session — establish your working weights.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{done:'✓ 23 Mar: 10.125 kg'}},
+          {name:'Prone dumbbell row',note:'Face down on incline bench',sets:'4 × 10',cue:'Elbow straight back, tight to body.<div class="cue green">No elbow flare. Hand tracks under body centreline.</div>',video:'prone+incline+dumbbell+row',weights:{done:'✓ 23 Mar: 12.5 kg'}},
+          {name:'Lat pulldown',note:'Wide grip',sets:'4 × 10',cue:'Pull to upper chest, elbows drive down and back.<div class="cue green">Chest tall, slight lean back.</div>',video:'lat+pulldown+proper+form',weights:{done:'✓ 23 Mar: 35 kg'}},
+          {name:'Pallof press',note:'Each side',sets:'3 × 12',cue:'Cable at chest height. Resist rotation.<div class="cue green">Hand under body, not drifting wide.</div>',video:'pallof+press+core+tutorial'},
+        ],
+        finisher:[
+          {name:'Dead hang',note:'Bar hang, passive',sets:'3 × 30 sec',cue:'Simply hang. Decompresses the shoulder after all the pulling work.',video:'dead+hang+shoulder+decompression'},
+        ],
+      },
+      thuExercises: {
+        warmup:[
+          {name:'Arm circles + cross-body swings',sets:'2 × 20',cue:'Slow, controlled. Loosen the shoulder capsule. Both directions.',video:'arm+circles+shoulder+warmup'},
+          {name:'Band pull-aparts',sets:'2 × 20',cue:'Lighter band than Monday. Focus on the squeeze at end range.',video:'band+pull+apart+shoulder'},
+        ],
+        main:[
+          {name:'TRX / ring fallout',sets:'3 × 10',cue:'Anterior shoulder stability — holds elbow up against water resistance.<div class="cue amber">The harder this feels, the more you need it.</div>',video:'TRX+fallout+exercise'},
+          {name:'Face pulls',note:'Cable · rope attachment',sets:'3 × 15',cue:'Pull rope to face, elbows high and wide.<div class="cue amber">Elbows finish ABOVE the hands. Every rep.</div>',video:'face+pulls+cable+rotator+cuff',weights:{last:'5 kg',today:'6.125 kg'}},
+          {name:'Single-arm cable row',note:'20–30% lighter than Monday',sets:'3 × 12',cue:'Perfect elbow position — no compensating with the shoulder.<div class="cue amber">Quality over load today.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'7.5 kg',today:'8.625 kg'}},
+          {name:'Side-lying external rotation',note:'Dumbbell · each side',sets:'3 × 15',cue:'Lie on side, elbow at 90°. Rotate dumbbell upward slowly.<div class="cue amber">Light weight. Slow and controlled. Never rush this one.</div>',video:'side+lying+external+rotation+rotator+cuff',weights:{last:'3 kg',today:'3 kg (hold)'}},
+        ],
+        finisher:[
+          {name:'Plank to downward dog',sets:'3 × 10',cue:'From plank, push hips up slowly. Shoulders packed — no shrugging.',video:'plank+to+downward+dog+exercise'},
+          {name:'Doorway chest stretch',sets:'3 × 30 sec',cue:'Arms at 90° in doorframe, lean gently. Counteracts forward shoulder posture.',video:'doorway+chest+stretch+swimmer'},
+        ],
+      },
+    },
+    {
+      week:3, monDate:'8 Apr', monDay:'Tuesday', thuDate:'10 Apr', status:'planned',
+      monNote:'⚠️ Coach swim in morning — gym in afternoon',
+      monExercises: {
+        warmup:[
+          {name:'Band pull-aparts',sets:'3 × 20',cue:'Arms straight, pull to chest. Squeeze shoulder blades at end range.',video:'band+pull+apart+shoulder'},
+          {name:'Scapular wall slides',sets:'3 × 15',cue:'Back flat on wall, goalpost arms. Elbows and wrists stay on wall throughout.',video:'scapular+wall+slides'},
+        ],
+        main:[
+          {name:'Single-arm cable row',note:'High pulley · face height',sets:'4 × 12',cue:'Back → lock → pause → pull. Elbow stays high throughout.<div class="cue green">First session back — own the technique before adding load.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'10.125 kg',today:'11.25 kg'}},
+          {name:'Prone dumbbell row',note:'Face down on incline bench',sets:'4 × 10',cue:'Elbow straight back, tight to body. No elbow flare.<div class="cue green">Hand tracks under body centreline every rep.</div>',video:'prone+incline+dumbbell+row',weights:{last:'12.5 kg',today:'15 kg'}},
+          {name:'Lat pulldown',note:'Wide grip',sets:'4 × 10',cue:'Pull to upper chest, elbows drive down and back.<div class="cue green">Chest tall, slight lean back — no collapsing forward.</div>',video:'lat+pulldown+proper+form',weights:{last:'35 kg',today:'36.125 kg'}},
+          {name:'Pallof press',note:'Each side',sets:'3 × 12',cue:'Cable at chest height. Resist rotation — hand stays under body.',video:'pallof+press+core+tutorial'},
+        ],
+        finisher:[
+          {name:'Dead hang',note:'Bar hang, passive',sets:'3 × 30 sec',cue:'Simply hang. Decompresses the shoulder after all the pulling work.',video:'dead+hang+shoulder+decompression'},
+        ],
+      },
+      thuExercises: {
+        warmup:[
+          {name:'Arm circles + cross-body swings',sets:'2 × 20',cue:'Slow, controlled. Loosen the shoulder capsule. Both directions.',video:'arm+circles+shoulder+warmup'},
+          {name:'Band pull-aparts',sets:'2 × 20',cue:'Lighter band than Tuesday. Focus on the squeeze at end range.',video:'band+pull+apart+shoulder'},
+        ],
+        main:[
+          {name:'TRX / ring fallout',sets:'3 × 10',cue:'Anterior shoulder stability — holds elbow up against water resistance.<div class="cue amber">The harder this feels, the more you need it.</div>',video:'TRX+fallout+exercise'},
+          {name:'Face pulls',note:'Cable · rope attachment',sets:'3 × 15',cue:'Pull rope to face, elbows high and wide. Elbows finish ABOVE the hands.',video:'face+pulls+cable+rotator+cuff',weights:{last:'6.125 kg',today:'7.25 kg'}},
+          {name:'Single-arm cable row',note:'20–30% lighter than Tuesday',sets:'3 × 12',cue:'Perfect elbow position — no compensating with the shoulder.<div class="cue amber">Quality over load today.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'8.625 kg',today:'9.75 kg'}},
+          {name:'Side-lying external rotation',note:'Dumbbell · each side',sets:'3 × 15',cue:'Lie on side, elbow at 90°. Rotate dumbbell upward slowly.<div class="cue amber">Light weight. Slow and controlled. Never rush this one.</div>',video:'side+lying+external+rotation+rotator+cuff',weights:{last:'3 kg',today:'4 kg'}},
+        ],
+        finisher:[
+          {name:'Plank to downward dog',sets:'3 × 10',cue:'From plank, push hips up slowly. Shoulders packed — no shrugging.',video:'plank+to+downward+dog+exercise'},
+          {name:'Doorway chest stretch',sets:'3 × 30 sec',cue:'Arms at 90° in doorframe, lean gently. Counteracts forward shoulder posture.',video:'doorway+chest+stretch+swimmer'},
+        ],
+      },
+    },
+  ],
+
+  // ── CALENDAR CONFIG ──
+  defaultSchedule: {1:'gym-mon',2:'pool-coach',3:'rest',4:'gym-thu',5:'pool-you',6:'rest',0:'rest'},
+  dateOverrides: {
+    '2025-03-31':'rest-week','2025-04-01':'rest-week','2025-04-02':'rest-week',
+    '2025-04-03':'rest-week','2025-04-04':'rest-week','2025-04-05':'rest-week','2025-04-06':'rest-week',
+    '2025-04-07':'rest','2025-04-08':'gym-tue','2025-04-09':'rest',
+    '2025-04-10':'gym-thu','2025-04-11':'pool-you','2025-04-12':'rest','2025-04-13':'rest',
+  },
+  weekPlan: {
+    '2025-03-17':{'gym-mon':0,'gym-thu':0,'pool-you':0},
+    '2025-03-24':{'gym-mon':1,'gym-thu':1,'pool-you':1},
+    '2025-04-07':{'gym-tue':2,'gym-thu':2,'pool-you':2},
+  },
+  restWeekMondays: ['2025-03-31'],
+
+  // ── DASHBOARD ──
+  nextSessionFocus: '🎯 <strong>Rest week (31 Mar – 6 Apr):</strong> Week 2 complete — both pool sessions hit Swolf &lt;80 (avg 76.9). Rest week as planned. Week 3 starts Tue 8 Apr (gym) with Pool Session C on Fri 11 Apr: 75m or 100m reps.',
+};
+
+// ╔═══════════════════════════════════════════════════════════════╗
+// ║  ENGINE — renders everything from DATA, don't edit below     ║
+// ╚═══════════════════════════════════════════════════════════════╝
+
+// ── Helpers ──
+function getToday(){ return new Date(DATA.today); }
+function dateKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function getWeekMonday(d){ const t=new Date(d); const dow=t.getDay(); t.setDate(t.getDate()-(dow===0?6:dow-1)); t.setHours(0,0,0,0); return t; }
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function fmtDate(d){ return d.getDate()+' '+MONTHS[d.getMonth()]; }
+function dayBadge(label,date,color,bg){ return `<span style="font-family:var(--mono);font-size:11px;color:${color};background:${bg};border-radius:5px;padding:2px 6px;margin-right:6px;">${label} ${fmtDate(date)}</span>`; }
+function distClass(d){ return d<=50?'d50':d<=100?'d100':d<=150?'d150':d<=200?'d200':'d300'; }
+function swClass(s){ return s<=74?'sw-good':s<=82?'sw-ok':'sw-high'; }
+const dayLabels={'gym-mon':'Strength','gym-tue':'Strength','gym-thu':'Stability','pool-coach':'Coach','pool-you':'Pool','rest':'','rest-week':''};
+
+// Build pastDates lookup from sessions
+const pastDates={};
+DATA.sessions.forEach((s,i)=>{ pastDates[s.date]=i; });
+
+// Computed stats
+function computeStats(){
+  const S=DATA.sessions;
+  const last=S[S.length-1], prev=S.length>1?S[S.length-2]:null;
+  const bestSwolf=Math.min(...S.map(s=>Math.min(...s.laps.map(l=>l.sw))));
+  const bestSwolfSession=S.find(s=>s.laps.some(l=>l.sw===bestSwolf));
+  const bestStrokes=Math.min(...S.map(s=>Math.min(...s.laps.map(l=>l.st))));
+  const bestStrokesSession=S.find(s=>s.laps.some(l=>l.st===bestStrokes));
+  const avgSwolf=(S.reduce((a,s)=>a+s.avgSwolf,0)/S.length).toFixed(1);
+  const avgStrokes=(S.reduce((a,s)=>a+s.avgStrokes,0)/S.length).toFixed(1);
+  const trendSwolf=prev?`${prev.avgSwolf}→${last.avgSwolf}`:`${last.avgSwolf}`;
+  const trendDir=prev?(last.avgSwolf<prev.avgSwolf?'good':'warn'):'warn';
+  const trendLabel=prev?(last.avgSwolf<prev.avgSwolf?'▼ improving':'technique transition'):'baseline';
+  return {bestSwolf,bestSwolfSession,bestStrokes,bestStrokesSession,avgSwolf,avgStrokes,trendSwolf,trendDir,trendLabel,last,count:S.length};
+}
+
+// Current week number
+function getCurrentWeekNum(){
+  const monday=getWeekMonday(getToday());
+  const mk=dateKey(monday);
+  const keys=Object.keys(DATA.weekPlan).sort();
+  return keys.indexOf(mk)+1;
+}
+
+// ── TABS ──
+const TAB_IDS=['dashboard','calendar','pool','gym','progress','plan'];
+const TAB_LABELS=['Dashboard','Calendar','🏊 Pool','💪 Gym','📊 Progress','📋 Plan'];
+function initTabs(){
+  const el=document.getElementById('tabs');
+  el.innerHTML=TAB_IDS.map((id,i)=>`<div class="tab${i===0?' active':''}" onclick="showTab('${id}')">${TAB_LABELS[i]}</div>`).join('');
+}
+function showTab(id){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+  TAB_IDS.forEach((t,i)=>{ if(t===id) document.querySelectorAll('.tab')[i].classList.add('active'); });
+  window.scrollTo(0,0);
+}
+
+// ── MODAL ──
+function openSession(idx){
+  const s=DATA.sessions[idx];
+  document.getElementById('modal-date').textContent=s.date.replace(/(\d{4})-(\d{2})-(\d{2})/,(m,y,mo,d)=>parseInt(d)+' '+MONTHS[parseInt(mo)-1]+' '+y);
+  document.getElementById('modal-title').textContent=s.lapCount+' training laps · '+s.distance;
+  document.getElementById('modal-kpis').innerHTML=`
+    <div class="modal-kpi"><div class="modal-kpi-label">Avg Swolf</div><div class="modal-kpi-value">${s.avgSwolf}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-label">Str/50m</div><div class="modal-kpi-value">${s.avgStrokes}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-label">Avg HR</div><div class="modal-kpi-value">${s.avgHR} BPM</div></div>`;
+  document.getElementById('modal-summary').textContent=s.summary||'';
+  document.getElementById('modal-drills').innerHTML=(s.drills||'').replace(/\n\n/g,'<br><br>');
+  let rows=s.laps.map(l=>`<tr><td>Lap ${l.n}</td><td><span class="dist-badge ${distClass(l.dist)}">${l.dist}m</span></td><td>${l.t}</td><td class="${swClass(l.sw)}">${l.sw}</td><td>${l.st}</td><td>${l.hr}</td></tr>`).join('');
+  rows+=`<tr class="avg-row"><td>Avg</td><td>—</td><td>—</td><td>${s.avgSwolf}</td><td>${s.avgStrokes}</td><td>${s.avgHR}</td></tr>`;
+  document.getElementById('modal-laps').innerHTML=`<table class="laps-table"><thead><tr><th>Lap</th><th>Dist</th><th>Time</th><th>Swolf</th><th>Str/50m</th><th>HR</th></tr></thead><tbody>${rows}</tbody></table><div style="margin-top:8px;font-size:11px;color:var(--muted);">Swolf colour: <span class="sw-good">■</span> ≤74 good &nbsp; <span class="sw-ok">■</span> 75–82 ok &nbsp; <span class="sw-high">■</span> ≥83 high</div>`;
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal(e){ if(e.target===document.getElementById('modal-bg')) closeModalDirect(); }
+function closeModalDirect(){ document.getElementById('modal-bg').classList.remove('open'); }
+
+// ── PAST SESSIONS LIST (reusable) ──
+function renderPastSessions(showSwolf){
+  return DATA.sessions.slice().reverse().map((s,ri)=>{
+    const idx=DATA.sessions.length-1-ri;
+    const d=new Date(s.date+'T00:00:00');
+    const label=fmtDate(d);
+    const extra=s.tag?` · ${s.tag}`:'';
+    const line1=showSwolf?`${s.lapCount} laps · ${s.distance} · Swolf ${s.avgSwolf} · ${s.avgStrokes} str/50m`:`${s.lapCount} laps · ${s.distance}${extra}`;
+    const line2=showSwolf?`${s.tag||''} · Avg HR ${s.avgHR} BPM · best lap Swolf ${Math.min(...s.laps.map(l=>l.sw))}`:`Swolf ${s.avgSwolf} · ${s.avgStrokes} str/50m · ${s.avgHR} BPM`;
+    return `<div class="past-session-row" onclick="openSession(${idx})"><div class="ps-date">${label}</div><div class="ps-info"><div class="ps-name">${line1}</div><div class="ps-stats">${line2}</div></div><div class="ps-arrow">→</div></div>`;
+  }).join('');
+}
+
+// ── DASHBOARD ──
+function renderDashboard(){
+  const st=computeStats();
+  const wn=getCurrentWeekNum();
+  const today=getToday();
+  const monday=getWeekMonday(today);
+  const mk=dateKey(monday);
+  const isRestWeek=DATA.restWeekMondays.includes(mk);
+  const wPlan=DATA.weekPlan[mk]||{};
+
+  // Chart data arrays
+  const labels=DATA.sessions.map(s=>s.label);
+  const colors=['#B5D4F4','#9FE1CB','#FAC775','#F5C4B3','#C4B5FD','#6EE7B7','#FCA5A5','#93C5FD'].slice(0,labels.length);
+
+  let html=`
+  <div class="kpi-row cols4" style="margin-top:.5rem">
+    <div class="kpi blue"><div class="kpi-label">Baseline</div><div class="kpi-value">${DATA.goal.baseline}</div><div class="kpi-sub">400m time</div></div>
+    <div class="kpi green"><div class="kpi-label">Target</div><div class="kpi-value">${DATA.goal.target}</div><div class="kpi-sub">end of year</div></div>
+    <div class="kpi amber"><div class="kpi-label">Best Swolf</div><div class="kpi-value">${st.bestSwolf}</div><div class="kpi-sub">${st.bestSwolfSession.label} · lap only</div></div>
+    <div class="kpi purple"><div class="kpi-label">Sessions</div><div class="kpi-value">${st.count}</div><div class="kpi-sub">logged</div></div>
+  </div>
+  <div class="dash-progress">
+    <div class="dash-progress-header"><div class="dash-progress-title">📊 Efficiency — laps only</div><div class="card-sub">tap dot to see session</div></div>
+    <div class="card-body">
+      <div class="mini-stats-grid">
+        <div class="mini-stat"><div class="mini-stat-label">Swolf trend</div><div class="mini-stat-value">${st.trendSwolf}</div><div class="mini-stat-trend trend-${st.trendDir}">${st.trendLabel}</div></div>
+        <div class="mini-stat"><div class="mini-stat-label">Avg Swolf</div><div class="mini-stat-value">${st.avgSwolf}</div><div class="mini-stat-trend trend-warn">target &lt;70</div></div>
+        <div class="mini-stat"><div class="mini-stat-label">Avg strokes</div><div class="mini-stat-value">${st.avgStrokes}</div><div class="mini-stat-trend ${parseFloat(st.avgStrokes)<24?'trend-good':'trend-warn'}">${st.last.avgStrokes} latest</div></div>
+      </div>
+      <div class="mini-chart-wrap"><canvas id="dashSwolfChart"></canvas></div>
+      <div style="margin-top:8px"><div class="mini-chart-wrap"><canvas id="dashStrokeChart"></canvas></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Goal progress</div><div class="card-sub">Phase ${DATA.goal.phase} of ${DATA.goal.totalPhases}</div></div>
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>${DATA.goal.baseline} (baseline)</span><span style="color:var(--blue);font-weight:500">sub ${DATA.goal.target} (goal)</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:15%"></div></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">15 seconds to save · ~10 months of training remaining</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">This week</div><div class="card-sub">${isRestWeek?'Rest week':'Phase 1 · Week '+wn}</div></div>
+    <div class="card-body" style="padding:8px 14px;" id="this-week-body"></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Past sessions</div><div class="card-sub">tap to see full lap breakdown</div></div>
+    <div class="card-body" style="padding:8px 14px;">${renderPastSessions(false)}</div>
+  </div>
+  <div class="focus-box blue">${DATA.nextSessionFocus}</div>`;
+
+  document.getElementById('pane-dashboard').innerHTML=html;
+  renderThisWeek();
+  initDashCharts(labels,colors);
+}
+
+function renderThisWeek(){
+  const today=getToday();
+  const monday=getWeekMonday(today);
+  const mk=dateKey(monday);
+  const isRestWeek=DATA.restWeekMondays.includes(mk);
+  const wPlan=DATA.weekPlan[mk]||{};
+  const wpIdx=wPlan['gym-mon']!==undefined?wPlan['gym-mon']:(wPlan['gym-tue']!==undefined?wPlan['gym-tue']:null);
+  const wpThu=wPlan['gym-thu']!==undefined?wPlan['gym-thu']:null;
+  const wpPool=wPlan['pool-you']!==undefined?wPlan['pool-you']:null;
+
+  const days=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(monday); d.setDate(monday.getDate()+i);
+    days.push(d);
+  }
+
+  if(isRestWeek){
+    document.getElementById('this-week-body').innerHTML=`<div style="text-align:center;padding:20px 10px;color:var(--muted);font-size:13px;"><div style="font-size:24px;margin-bottom:8px;">😴</div><strong>Rest week</strong> — no scheduled training.<br>Active recovery only: walk, stretch, sleep well.</div>`;
+    return;
+  }
+
+  const rows=days.map((d,i)=>{
+    const dk=dateKey(d);
+    const dow=d.getDay();
+    const pIdx=pastDates[dk];
+    const hasPast=pIdx!==undefined;
+    const dayName=DAYS[dow];
+    const shortDay=dayName.slice(0,3);
+
+    // Mon
+    if(dow===1){
+      const click=wpIdx!==null?`onclick="showTab('gym');gymWeekIdx=${wpIdx+1};updateGymSwitcher()"`:'';
+      return `<div class="session-item" ${click}><div class="session-icon gym-mon">💪</div><div class="session-info"><div class="session-name">${dayBadge('Mon',d,'var(--green)','var(--green-light)')}Gym — strength</div><div class="session-meta">EVF pulling power · compound movements · ~60 min</div></div><div class="session-arrow">→</div></div>`;
+    }
+    // Tue
+    if(dow===2) return `<div class="session-item"><div class="session-icon" style="background:var(--purple-light)">👨‍🏫</div><div class="session-info"><div class="session-name">${dayBadge('Tue',d,'var(--purple)','var(--purple-light)')}Coach session</div><div class="session-meta">With your pool coach · no card needed</div></div><div class="session-arrow" style="color:var(--purple)">—</div></div>`;
+    // Wed
+    if(dow===3){
+      if(hasPast) return `<div class="session-item" onclick="openSession(${pIdx})"><div class="session-icon pool">🏊</div><div class="session-info"><div class="session-name">${dayBadge('Wed',d,'var(--blue)','var(--blue-light)')}Pool — bonus session</div><div class="session-meta">Unplanned extra · tap to see results</div></div><div class="session-arrow" style="color:var(--green)">📊</div></div>`;
+      return `<div class="session-item" style="cursor:default;opacity:.55;"><div class="session-icon" style="background:var(--gray-light)">😴</div><div class="session-info"><div class="session-name">${dayBadge('Wed',d,'#6B7280','var(--gray-light)')}Rest</div><div class="session-meta">Active recovery · walk, stretch, sleep</div></div></div>`;
+    }
+    // Thu
+    if(dow===4){
+      const click=wpThu!==null?`onclick="showTab('gym');gymWeekIdx=${wpThu+1};updateGymSwitcher()"`:'';
+      return `<div class="session-item" ${click}><div class="session-icon gym-thu">💪</div><div class="session-info"><div class="session-name">${dayBadge('Thu',d,'var(--amber)','var(--amber-light)')}Gym — stability</div><div class="session-meta">Shoulder stability · mobility · ~50 min</div></div><div class="session-arrow">→</div></div>`;
+    }
+    // Fri
+    if(dow===5){
+      if(hasPast) return `<div class="session-item" onclick="openSession(${pIdx})"><div class="session-icon pool">🏊</div><div class="session-info"><div class="session-name">${dayBadge('Fri',d,'var(--blue)','var(--blue-light)')}Pool session</div><div class="session-meta">Tap to see results</div></div><div class="session-arrow" style="color:var(--green)">📊</div></div>`;
+      const click=wpPool!==null?`onclick="showTab('pool');poolWeekIdx=${wpPool+1};updatePoolSwitcher()"`:'';
+      return `<div class="session-item" ${click}><div class="session-icon pool">🏊</div><div class="session-info"><div class="session-name">${dayBadge('Fri',d,'var(--blue)','var(--blue-light)')}Pool session</div><div class="session-meta">EVF catch + stroke length · technique reps</div></div><div class="session-arrow">→</div></div>`;
+    }
+    // Sat/Sun
+    return `<div class="session-item" style="cursor:default;opacity:.55;${dow===0?'border:none;':''}"><div class="session-icon" style="background:var(--gray-light)">😴</div><div class="session-info"><div class="session-name">${dayBadge(shortDay,d,'#6B7280','var(--gray-light)')}Rest</div><div class="session-meta">Recovery · no training</div></div></div>`;
+  });
+
+  document.getElementById('this-week-body').innerHTML=rows.join('');
+}
+
+function initDashCharts(labels,colors){
+  const dark=matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridCol=dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)';
+  const textCol=dark?'#c2c0b6':'#6B7280';
+  const swD=DATA.sessions.map(s=>s.avgSwolf);
+  const stD=DATA.sessions.map(s=>s.avgStrokes);
+  const opts=(yMin,yMax)=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:true}},scales:{x:{ticks:{color:textCol,font:{size:10}},grid:{display:false}},y:{min:yMin,max:yMax,ticks:{color:textCol,font:{size:10},maxTicksLimit:4},grid:{color:gridCol}}}});
+  const addClick=c=>{c.options.onClick=(e,items)=>{if(items.length)openSession(items[0].index);};c.update();};
+
+  const c1=new Chart(document.getElementById('dashSwolfChart'),{type:'line',data:{labels,datasets:[{data:swD,borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,.08)',fill:true,tension:.35,pointRadius:5,pointBackgroundColor:colors,borderWidth:2}]},options:{...opts(65,95),plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Swolf: '+c.raw}}}}});
+  addClick(c1);
+  const c2=new Chart(document.getElementById('dashStrokeChart'),{type:'line',data:{labels,datasets:[{data:stD,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,.08)',fill:true,tension:.35,pointRadius:5,pointBackgroundColor:colors,borderWidth:2}]},options:{...opts(15,35),plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Strokes: '+c.raw}}}}});
+  addClick(c2);
+}
+
+// ── POOL TAB ──
+let poolWeekIdx=getCurrentWeekNum()||1;
+
+function renderPoolTab(){
+  const pw=DATA.poolWeeks;
+  let html=`<div class="week-switcher"><button id="pool-prev-btn" onclick="switchPoolWeek(-1)">← Prev</button><div class="ws-label" id="pool-week-label"></div><button id="pool-next-btn" onclick="switchPoolWeek(1)">Next →</button></div>`;
+  pw.forEach(p=>{ html+=renderPoolCard(p); });
+  document.getElementById('pane-pool').innerHTML=html;
+  updatePoolSwitcher();
+}
+
+function renderPoolCard(p){
+  const isDone=p.status==='done', isCurrent=p.status==='current', isPlanned=p.status==='planned';
+  const badgeClass=isDone?'green':isCurrent?'green':isPlanned?'gray':'blue';
+  const badgeText=isDone?'Completed':isCurrent?'This week':'Planned';
+  const kpiClass=isDone?'green':isCurrent?'blue':'gray';
+  const opacity=isPlanned?'style="opacity:.6"':'';
+
+  let body='';
+  // KPIs
+  body+=`<div class="kpi-row cols4">${p.kpis.map(k=>`<div class="kpi ${kpiClass}"><div class="kpi-label">${k.l}</div><div class="kpi-value">${k.v}</div></div>`).join('')}</div>`;
+  // Focus
+  if(p.focusResult) body+=`<div class="focus-box green">${p.focusResult}</div>`;
+  if(p.focusPlan) body+=`<div class="focus-box blue">${p.focusPlan}</div>`;
+  // Sections
+  (p.sections||[]).forEach(sec=>{
+    body+=`<div class="section-label">${sec.label}</div>`;
+    body+=`<table><thead><tr>${sec.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+    sec.rows.forEach(r=>{
+      body+='<tr>';
+      r.forEach(cell=>{
+        if(typeof cell==='object'&&cell.v!==undefined) body+=`<td style="color:var(--${cell.c})">${cell.v}</td>`;
+        else body+=`<td>${cell}</td>`;
+      });
+      body+='</tr>';
+    });
+    body+='</tbody></table>';
+  });
+  // Coach note
+  if(p.coachNote) body+=`<div class="focus-box blue" style="margin-top:1rem">${p.coachNote}</div>`;
+
+  return `<div id="${p.id}" class="card" ${opacity}><div class="card-header"><div><div class="card-title">🏊 ${p.title}</div><div class="card-sub">Phase 1 · Week ${p.week} · ${p.date}${isDone?' · Done ✓':''}</div></div><span class="badge ${badgeClass}">${badgeText}</span></div><div class="card-body">${body}</div></div>`;
+}
+
+function updatePoolSwitcher(){
+  const pw=DATA.poolWeeks;
+  const cur=pw[poolWeekIdx-1];
+  document.getElementById('pool-week-label').textContent=`Week ${cur.week} — ${cur.date}${cur.status==='done'?' ✓':''}`;
+  document.getElementById('pool-prev-btn').disabled=poolWeekIdx<=1;
+  document.getElementById('pool-next-btn').disabled=poolWeekIdx>=pw.length;
+  pw.forEach(p=>{const el=document.getElementById(p.id);if(el)el.style.display='none';});
+  const active=document.getElementById(cur.id);
+  if(active){active.style.display='block';active.style.opacity='1';}
+}
+function switchPoolWeek(d){const n=poolWeekIdx+d;if(n<1||n>DATA.poolWeeks.length)return;poolWeekIdx=n;updatePoolSwitcher();window.scrollTo(0,0);}
+
+// ── GYM TAB ──
+let gymWeekIdx=getCurrentWeekNum()||1;
+
+function renderGymTab(){
+  const gw=DATA.gymWeeks;
+  let html=`<div class="week-switcher"><button id="gym-prev-btn" onclick="switchGymWeek(-1)">← Prev</button><div class="ws-label" id="gym-week-label"></div><button id="gym-next-btn" onclick="switchGymWeek(1)">Next →</button></div>`;
+  gw.forEach(g=>{ html+=renderGymCard(g,'mon')+renderGymCard(g,'thu'); });
+  document.getElementById('pane-gym').innerHTML=html;
+  updateGymSwitcher();
+}
+
+function renderGymCard(g,dayType){
+  const isMon=dayType==='mon';
+  const exercises=isMon?g.monExercises:g.thuExercises;
+  const date=isMon?g.monDate:g.thuDate;
+  const dayLabel=isMon?(g.monDay||'Monday'):'Thursday';
+  const typeLabel=isMon?'Strength':'Stability';
+  const color=isMon?'green':'amber';
+  const isDone=g.status==='done', isCurrent=g.status==='current';
+  const badgeClass=isDone?'gray':isCurrent?'green':'blue';
+  const badgeText=isDone?`Week ${g.week}`:isCurrent?'Current':`Week ${g.week}`;
+  const id=`gym-${dayType}-w${g.week}`;
+  const dur=isMon?'~60 min':'~50 min';
+  const intensity=isMon?'Moderate+':'Light–Mod';
+  const note=isMon&&g.monNote?` · ${g.monNote}`:'';
+
+  const renderExTable=(exs,label,badgeColor)=>{
+    let h=`<div class="section-label">${label}</div><table><thead><tr><th>Exercise</th><th>Sets × Reps</th><th>Coaching cue</th><th>Video</th></tr></thead><tbody>`;
+    exs.forEach(ex=>{
+      let wHtml='';
+      if(ex.weights){
+        const w=ex.weights;
+        if(w.done) wHtml=`<div style="margin-top:5px;"><span class="wt-now">${w.done}</span></div>`;
+        else if(w.ref) wHtml=`<div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;"><span class="wt-ref">${w.ref}</span><span class="wt-now">today: ${w.today}</span></div>`;
+        else if(w.last) wHtml=`<div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;"><span class="wt-ref">last: ${w.last}</span><span class="wt-now">today: ${w.today}</span></div>`;
+      }
+      h+=`<tr><td><strong>${ex.name}</strong>${ex.note?`<div class="note">${ex.note}</div>`:''}</td><td><span class="badge ${badgeColor}">${ex.sets}</span></td><td>${ex.cue}${wHtml}</td><td><a class="yt" href="https://www.youtube.com/results?search_query=${ex.video}" target="_blank">▶ YouTube</a></td></tr>`;
+    });
+    h+='</tbody></table>';
+    return h;
+  };
+
+  let body=`<div class="kpi-row cols3"><div class="kpi ${color}"><div class="kpi-label">Duration</div><div class="kpi-value">${dur}</div></div><div class="kpi ${color}"><div class="kpi-label">Type</div><div class="kpi-value">${typeLabel}</div></div><div class="kpi ${color}"><div class="kpi-label">Intensity</div><div class="kpi-value">${intensity}</div></div></div>`;
+
+  if(isMon) body+=`<div class="focus-box green">🎯 <strong>Focus:</strong> ${g.week===1?'Fresh after the weekend — heavier day. Every pulling rep: <strong>elbow high, drive straight back</strong>. Build EVF under load.':g.week===2?'Small load increase on the main lifts vs Week 1. Same elbow-high discipline.':'Back after rest week — start controlled. Progress weights where form was solid.'}</div>`;
+  else body+=`<div class="focus-box amber">🎯 <strong>Focus:</strong> ${g.week===1?'Mid-week. <strong>Keep the shoulder healthy</strong> with lighter, controlled movements.':g.week===2?'Same structure as Week 1. Small cable increases where form was solid.':'First stability session back after rest week. External rotation stays conservative.'}</div>`;
+
+  body+=renderExTable(exercises.warmup,`Warm-up · ~${isMon?'10':'8'} min`,color);
+  body+=renderExTable(exercises.main,`Main block · ~${isMon?'40':'32'} min`,'amber');
+  body+=renderExTable(exercises.finisher,`${isMon?'Finisher':'Mobility finisher'} · ~10 min`,'blue');
+
+  if(isMon) body+=`<div class="focus-box amber" style="margin-top:1rem">🔗 <strong>Connection:</strong> Cable row = catch · Prone row = pull · Lat pulldown = pull-through power · Pallof press = hand under body.</div>`;
+  else body+=`<div class="focus-box green" style="margin-top:1rem">🔗 <strong>Why ${dayLabel} is different:</strong> ${dayLabel==='Monday'?'Monday':'The strength day'} builds the power. ${dayLabel} keeps the shoulder healthy. Face pulls and external rotation are your injury insurance policy.</div>`;
+
+  return `<div id="${id}" class="card"><div class="card-header"><div><div class="card-title">💪 ${dayLabel} Gym — ${typeLabel}</div><div class="card-sub">Phase 1 · Week ${g.week} · ${date}${note}</div></div><span class="badge ${badgeClass}">${badgeText}</span></div><div class="card-body">${body}</div></div>`;
+}
+
+function updateGymSwitcher(){
+  const gw=DATA.gymWeeks;
+  const cur=gw[gymWeekIdx-1];
+  document.getElementById('gym-week-label').textContent=`Week ${cur.week} — ${cur.monDate} & ${cur.thuDate}${cur.status==='done'?' ✓':''}`;
+  document.getElementById('gym-prev-btn').disabled=gymWeekIdx<=1;
+  document.getElementById('gym-next-btn').disabled=gymWeekIdx>=gw.length;
+  gw.forEach((g,i)=>{
+    ['mon','thu'].forEach(d=>{const el=document.getElementById(`gym-${d}-w${g.week}`);if(el)el.style.display='none';});
+  });
+  ['mon','thu'].forEach(d=>{const el=document.getElementById(`gym-${d}-w${cur.week}`);if(el)el.style.display='block';});
+}
+function switchGymWeek(d){const n=gymWeekIdx+d;if(n<1||n>DATA.gymWeeks.length)return;gymWeekIdx=n;updateGymSwitcher();window.scrollTo(0,0);}
+
+// ── CALENDAR TAB ──
+let calWeek=0;
+
+function renderCalendarTab(){
+  document.getElementById('pane-calendar').innerHTML=`
+    <div class="card" style="margin-top:.5rem"><div class="card-header"><div class="week-nav"><button onclick="changeWeek(-1)">← Prev</button><div class="week-label" id="week-label">This week</div><button onclick="changeWeek(1)">Next →</button></div></div><div class="card-body"><div class="calendar-grid" id="calendar-grid"></div><div class="cal-legend"><div class="leg-item"><div class="leg-dot" style="background:#6EE7B7"></div>Monday gym (strength)</div><div class="leg-item"><div class="leg-dot" style="background:#FCD34D"></div>Thursday gym (stability)</div><div class="leg-item"><div class="leg-dot" style="background:#C4B5FD"></div>Coach session</div><div class="leg-item"><div class="leg-dot" style="background:var(--blue-mid)"></div>Your pool session</div></div></div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Weekly structure</div><div class="card-sub">tap any training day</div></div><div class="card-body" style="padding:8px 14px;" id="cal-weekly-structure"></div></div>`;
+  renderCalGrid();
+}
+
+function renderCalGrid(){
+  const today=getToday();
+  const thisMonday=getWeekMonday(today);
+  const monday=new Date(thisMonday);monday.setDate(thisMonday.getDate()+calWeek*7);
+  const mk=dateKey(monday);
+  const isRW=DATA.restWeekMondays.includes(mk);
+  const wPlan=DATA.weekPlan[mk]||{};
+
+  let weekLabel='This week';
+  if(calWeek===1) weekLabel='Next week';
+  else if(calWeek>1) weekLabel=`+${calWeek} weeks`;
+  else if(calWeek<0) weekLabel=`${calWeek} weeks ago`;
+  if(isRW) weekLabel='Rest week';
+  document.getElementById('week-label').textContent=weekLabel;
+
+  const grid=document.getElementById('calendar-grid');grid.innerHTML='';
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    const dk=dateKey(d);
+    const type=DATA.dateOverrides[dk]!==undefined?DATA.dateOverrides[dk]:(DATA.defaultSchedule[d.getDay()]||'rest');
+    const isToday=dk===dateKey(today);
+    const pIdx=pastDates[dk];
+    const hasPast=pIdx!==undefined;
+    const isRestDay=type==='rest'||type==='rest-week';
+    let clickable=false,clickFn=null,hint='';
+
+    if(hasPast){clickable=true;clickFn=()=>openSession(pIdx);hint=`<div style="font-size:9px;color:var(--blue);margin-top:2px;font-family:var(--mono)">📊 results</div>`;}
+    else if(!isRestDay&&wPlan[type]!==undefined){
+      clickable=true;
+      const wIdx=wPlan[type];
+      const tab=type==='pool-you'?'pool':'gym';
+      clickFn=()=>{showTab(tab);if(tab==='gym'){gymWeekIdx=wIdx+1;updateGymSwitcher();}else{poolWeekIdx=wIdx+1;updatePoolSwitcher();}};
+      hint=`<div style="font-size:9px;color:var(--blue);margin-top:2px;font-family:var(--mono)">tap →</div>`;
+    }
+
+    const cell=document.createElement('div');
+    const calType=type==='gym-tue'?'gym-mon':type==='rest-week'?'rest':type;
+    cell.className='cal-day '+calType+(isToday?' today':'')+(clickable?' clickable':'');
+    if(isRW)cell.style.opacity='0.4';
+    if(clickFn)cell.onclick=clickFn;
+    const label=dayLabels[type]||'';
+    const isRWDay=type==='rest-week';
+    cell.innerHTML=`<div class="cal-day-name">${DAYS[d.getDay()]}</div><div class="cal-day-num">${d.getDate()}</div>${label&&!isRWDay?`<div class="cal-day-tag">${label}</div>`:''}${isRWDay?`<div style="font-size:9px;color:var(--muted);font-family:var(--mono)">rest</div>`:''}${hint}`;
+    grid.appendChild(cell);
+  }
+  renderCalWeeklyStructure(mk,wPlan,isRW);
+}
+
+function renderCalWeeklyStructure(mk,wPlan,isRW){
+  const el=document.getElementById('cal-weekly-structure');if(!el)return;
+  if(isRW){el.innerHTML=`<div style="text-align:center;padding:16px 10px;color:var(--muted);font-size:13px;">😴 <strong>Rest week</strong> — no scheduled training.</div>`;return;}
+  const gymIdx=wPlan['gym-mon']!==undefined?wPlan['gym-mon']:(wPlan['gym-tue']!==undefined?wPlan['gym-tue']:null);
+  const thuIdx=wPlan['gym-thu']!==undefined?wPlan['gym-thu']:null;
+  const poolIdx=wPlan['pool-you']!==undefined?wPlan['pool-you']:null;
+  const monClick=gymIdx!==null?`onclick="showTab('gym');gymWeekIdx=${gymIdx+1};updateGymSwitcher()"`:'';
+  const thuClick=thuIdx!==null?`onclick="showTab('gym');gymWeekIdx=${thuIdx+1};updateGymSwitcher()"`:'';
+  const poolClick=poolIdx!==null?`onclick="showTab('pool');poolWeekIdx=${poolIdx+1};updatePoolSwitcher()"`:'';
+  el.innerHTML=`
+    <div class="session-item" ${monClick}><div class="session-icon gym-mon">💪</div><div class="session-info"><div class="session-name">Monday</div><div class="session-meta">Gym — strength · compound pulling</div></div><div class="session-arrow">→</div></div>
+    <div class="session-item"><div class="session-icon" style="background:var(--purple-light)">👨‍🏫</div><div class="session-info"><div class="session-name">Tuesday</div><div class="session-meta">Pool — with your coach (no card)</div></div><div class="session-arrow" style="color:var(--muted)">—</div></div>
+    <div class="session-item"><div class="session-icon" style="background:var(--gray-light)">😴</div><div class="session-info"><div class="session-name">Wednesday</div><div class="session-meta">Rest / active recovery</div></div></div>
+    <div class="session-item" ${thuClick}><div class="session-icon gym-thu">💪</div><div class="session-info"><div class="session-name">Thursday</div><div class="session-meta">Gym — stability · mobility</div></div><div class="session-arrow">→</div></div>
+    <div class="session-item" ${poolClick}><div class="session-icon pool">🏊</div><div class="session-info"><div class="session-name">Friday</div><div class="session-meta">Pool — your coached session</div></div><div class="session-arrow">→</div></div>
+    <div class="session-item" style="border:none"><div class="session-icon" style="background:var(--gray-light)">😴</div><div class="session-info"><div class="session-name">Sat / Sun</div><div class="session-meta">Rest and recovery</div></div></div>`;
+}
+function changeWeek(d){calWeek+=d;renderCalGrid();}
+
+// ── PROGRESS TAB ──
+function renderProgressTab(){
+  const st=computeStats();
+  const S=DATA.sessions;
+  const labels=S.map(s=>s.label);
+  const colors=['#B5D4F4','#9FE1CB','#FAC775','#F5C4B3','#C4B5FD','#6EE7B7','#FCA5A5','#93C5FD'].slice(0,S.length);
+
+  // Compute fastest/slowest per session (per 50m equivalent)
+  const fastestData=S.map(s=>{
+    const times=s.laps.map(l=>{const p=l.t.split(':');return(parseInt(p[0])*60+parseFloat(p[1]))/(l.dist/50);});
+    return Math.min(...times).toFixed(1);
+  });
+  const slowestData=S.map(s=>{
+    const times=s.laps.map(l=>{const p=l.t.split(':');return(parseInt(p[0])*60+parseFloat(p[1]))/(l.dist/50);});
+    return Math.max(...times).toFixed(1);
+  });
+
+  document.getElementById('pane-progress').innerHTML=`
+    <div class="kpi-row cols3" style="margin-top:.5rem">
+      <div class="kpi blue"><div class="kpi-label">Best Swolf</div><div class="kpi-value">${st.bestSwolf}</div><div class="kpi-sub">${st.bestSwolfSession.label} · trained lap</div></div>
+      <div class="kpi green"><div class="kpi-label">Best strokes</div><div class="kpi-value">${st.bestStrokes}</div><div class="kpi-sub">${st.bestStrokesSession.label} · lap</div></div>
+      <div class="kpi amber"><div class="kpi-label">Avg HR</div><div class="kpi-value">${Math.round(S.reduce((a,s)=>a+s.avgHR,0)/S.length)} BPM</div><div class="kpi-sub">mostly Zone 4</div></div>
+    </div>
+    <div class="card"><div class="card-header"><div class="card-title">Swolf — training laps only, per session</div><div class="card-sub">Target: below 70 · tap bar to see session</div></div><div class="card-body"><div class="chart-wrap"><canvas id="swolfChart"></canvas></div></div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Avg strokes per 50m — one hand</div><div class="card-sub">Target: below 22 · tap bar to see session</div></div><div class="card-body"><div class="chart-wrap"><canvas id="strokeChart"></canvas></div></div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Heart rate — avg training laps (BPM)</div><div class="card-sub">Zone 2 target: 130–145 BPM</div></div><div class="card-body"><div class="chart-wrap"><canvas id="hrChart"></canvas></div></div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Pace — fastest vs slowest lap (50m equiv.)</div><div class="card-sub">Smaller gap = better pacing control</div></div><div class="card-body"><div class="chart-wrap"><canvas id="paceChart"></canvas></div></div></div>
+    <div class="card"><div class="card-header"><div class="card-title">Session log</div><div class="card-sub">tap to see full lap breakdown</div></div><div class="card-body" style="padding:8px 14px;">${renderPastSessions(true)}</div></div>
+    <div class="focus-box blue">📊 <strong>Key insight:</strong> 26 Mar session confirmed the technique transfer (Wed extra session) — Swolf dropped from 85.6 to 76.9, strokes from 25.4 to 22.8. Every lap hit the target. The 50m format works. Next step: extend reps or increase distance per rep.</div>`;
+
+  // Charts
+  const dark=matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridCol=dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)';
+  const textCol=dark?'#c2c0b6':'#6B7280';
+  const makeOpts=(yMin,yMax,ylabel)=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:textCol,font:{size:11}},grid:{color:gridCol}},y:{min:yMin,max:yMax,ticks:{color:textCol,font:{size:11}},grid:{color:gridCol},title:{display:!!ylabel,text:ylabel||'',color:textCol,font:{size:11}}}}});
+  const addClick=c=>{c.options.onClick=(e,items)=>{if(items.length)openSession(items[0].index);};c.update();};
+
+  addClick(new Chart(document.getElementById('swolfChart'),{type:'bar',data:{labels,datasets:[{data:S.map(s=>s.avgSwolf),backgroundColor:colors}]},options:{...makeOpts(65,100),plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Avg Swolf: '+c.raw}}}}}));
+  addClick(new Chart(document.getElementById('strokeChart'),{type:'bar',data:{labels,datasets:[{data:S.map(s=>s.avgStrokes),backgroundColor:colors}]},options:{...makeOpts(15,35,'strokes/50m'),plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Avg strokes: '+c.raw}}}}}));
+  addClick(new Chart(document.getElementById('hrChart'),{type:'bar',data:{labels,datasets:[{data:S.map(s=>s.avgHR),backgroundColor:colors}]},options:{...makeOpts(100,180,'BPM'),plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Avg HR: '+c.raw+' BPM'}}}}}));
+  new Chart(document.getElementById('paceChart'),{type:'bar',data:{labels,datasets:[{label:'Fastest 50m',data:fastestData,backgroundColor:'#1D9E75'},{label:'Slowest 50m',data:slowestData,backgroundColor:'#F5C4B3'}]},options:{...makeOpts(40,80,'seconds'),plugins:{legend:{display:true,labels:{color:textCol,font:{size:11},boxWidth:10,padding:12}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+'s'}}}}});
+}
+
+// ── PLAN TAB ──
+function renderPlanTab(){
+  document.getElementById('pane-plan').innerHTML=`
+    <div style="margin-top:.5rem;margin-bottom:1rem"><div class="phase-row">
+      <div class="phase-block active"><div class="phase-num">Phase 1</div><div class="phase-name">Foundation</div><div class="phase-months">Now → Month 3</div></div>
+      <div class="phase-block"><div class="phase-num">Phase 2</div><div class="phase-name">Build</div><div class="phase-months">Month 4–7</div></div>
+      <div class="phase-block"><div class="phase-num">Phase 3</div><div class="phase-name">Race prep</div><div class="phase-months">Month 8–10</div></div>
+      <div class="phase-block"><div class="phase-num">Phase 4</div><div class="phase-name">Peak</div><div class="phase-months">Month 11–12</div></div>
+    </div></div>
+    <div class="card"><div class="card-header"><div class="card-title">📌 Phase 1 — Foundation</div><div class="card-sub">Now → Month 3 · Active</div></div><div class="card-body"><table><thead><tr><th>Focus area</th><th>Target</th><th>How</th></tr></thead><tbody>
+      <tr><td>Stroke length</td><td>≤ 24 strokes/50m</td><td>Fist drill, fingertip drag, 3-stroke pause</td></tr>
+      <tr><td>EVF catch</td><td>Consistent technique</td><td>Forearm pressure backward, elbow high</td></tr>
+      <tr><td>Stroke finish</td><td>Hand exits past hip</td><td>Focus in every cool-down</td></tr>
+      <tr><td>Heart rate</td><td>Stay &lt; 145 BPM</td><td>Deliberate easy aerobic laps</td></tr>
+      <tr><td>Swolf</td><td>Below 78 avg</td><td>Technique + controlled pace</td></tr>
+      <tr><td>Mon gym</td><td>Pulling strength</td><td>Cable row, prone row, lat pulldown</td></tr>
+      <tr><td>Thu gym</td><td>Shoulder health</td><td>Face pulls, external rotation, TRX</td></tr>
+    </tbody></table></div></div>
+    <div class="card" style="opacity:.6"><div class="card-header"><div class="card-title">Phase 2 — Build</div><div class="card-sub">Month 4–7 · Locked</div></div><div class="card-body"><table><thead><tr><th>Focus area</th><th>Target</th></tr></thead><tbody><tr><td>Threshold sets</td><td>Introduce 400m pace work</td></tr><tr><td>Swolf</td><td>Below 74 avg</td></tr><tr><td>Stroke count</td><td>≤ 22 per 50m</td></tr><tr><td>Gym shift</td><td>More pulling power, heavier lat work</td></tr></tbody></table></div></div>
+    <div class="card" style="opacity:.4"><div class="card-header"><div class="card-title">Phase 3 — Race prep</div><div class="card-sub">Month 8–10 · Locked</div></div><div class="card-body" style="font-size:13px;color:var(--muted);padding:14px;">400m-specific pace work · Negative splits · Race simulation.</div></div>
+    <div class="card" style="opacity:.4"><div class="card-header"><div class="card-title">Phase 4 — Peak</div><div class="card-sub">Month 11–12 · Locked</div></div><div class="card-body" style="font-size:13px;color:var(--muted);padding:14px;">Taper · Time trial · Sub 7:30 attempt.</div></div>
+    <div class="focus-box blue">🔄 <strong>How the plan evolves:</strong> Upload your Garmin CSV after each Friday session and I'll update the app with new data and a fresh session card.</div>`;
+}
+
+// ── INIT ──
+initTabs();
+renderDashboard();
+renderCalendarTab();
+renderPoolTab();
+renderGymTab();
+renderProgressTab();
+renderPlanTab();
+</script>
+</body>
+</html>

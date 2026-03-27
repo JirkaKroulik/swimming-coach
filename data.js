@@ -135,10 +135,27 @@ const DATA = {
       ],
     },
     {
-      id:'pool-c', week:3, title:'Pool Session C', date:'11 Apr', status:'planned',
-      kpis:[{l:'Total',v:'TBD'},{l:'Strokes',v:'TBD'},{l:'HR',v:'TBD'},{l:'Swolf',v:'TBD'}],
-      focusPlan:'📋 Planned after your Week 2 feedback on 28 Mar. Structure will build on whatever worked in the 10 × 50m session.',
-      sections:[],
+      id:'pool-c', week:3, title:'Pool Session C', date:'11 Apr', status:'current',
+      kpis:[{l:'Total',v:'~1,600m'},{l:'Main set',v:'8×100m'},{l:'Swolf target',v:'< 82'},{l:'Str target',v:'≤ 23/50m'}],
+      focusPlan:'🎯 <strong>Session focus:</strong> First test of whether the catch holds across a full 100m. You\'re not swimming faster — same technique, just twice per length. Target Swolf &lt;82 (deliberately relaxed vs your recent 76–78 on 50m — the turn and second length add real fatigue). If you hit &lt;80 on most laps, that\'s exceptional.',
+      coachNote:'🧠 <strong>Coach note:</strong> 8 reps rather than 10 — intentional. First session back after rest week at a new distance is enough load. Stop at 8 if form degrades on the second 50m of any rep. After the session, note which 50m felt harder — first or second. That shapes Session D.',
+      sections:[
+        {label:'Warm-up · 200m', type:'plan-table', headers:['Exercise','Distance','Notes'], rows:[
+          ['<span class="badge gray">Easy freestyle</span>','200m','Easy pace, no targets. On the second length of each 100m, count your strokes — gives a clean baseline before the drill block.<div class="cue">No pressure. Just wake up the feel.</div>'],
+        ]},
+        {label:'Drill block · 500m', type:'plan-table', headers:['Drill','Set','Rest','Coaching cue'], rows:[
+          ['<strong>Fingertip drag</strong><div class="note">snorkel + fins</div>','<span class="badge blue">4 × 50m</span>','20s','Use fins to slow the recovery and feel the entry on every stroke. Snorkel removes breathing — all focus on the arm path.<div class="cue">Entry fingertips first, elbow high. Same feel as your best 26 Mar laps.</div>'],
+          ['<strong>Fist drill</strong><div class="note">snorkel only</div>','<span class="badge blue">2 × 50m</span>','20s','Your reset drill — if the catch feels lost in the main set, this is the feeling you return to.<div class="cue">Forearm pressure backward, not downward.</div>'],
+          ['<strong>Pull finish pause</strong><div class="note">fins only</div>','<span class="badge blue">4 × 50m</span>','25s','After every 3rd stroke, pause and complete the pull fully past the hip. Especially important today — 100m reps mean the finish degrades on the second length when tired.<div class="cue">Hand must pass the hip every time. Feel the tricep at the finish.</div>'],
+        ]},
+        {label:'Main set · 8 × 100m', type:'plan-table', headers:['Set','Distance','Rest','Targets'], rows:[
+          ['<span class="badge amber">Reps 1–3</span><div class="note">Feel-out block</div>','3 × 100m','45s','Slightly longer rest — learning the 100m rhythm for the first time with this technique. Swolf &lt;82, strokes ≤23 on both 50m halves.<div class="cue amber">After rep 1: did the catch hold on the second length? That\'s the only question.</div>'],
+          ['<span class="badge amber">Reps 4–8</span><div class="note">Groove block</div>','5 × 100m','40s','Drop to 40s — matching your natural wall time from recent sessions. Same targets. If stroke count on second 50m goes above 25, take an extra 15s — no heroics.<div class="cue amber">If a rep feels perfect — remember exactly what you did. That\'s the template for Week 4.</div>'],
+        ]},
+        {label:'Cool-down · 100m', type:'plan-table', headers:['Exercise','Distance','Focus'], rows:[
+          ['<span class="badge gray">Easy</span>','100m','Very slow. Think only about the finish — hand exits past hip every stroke. Swolf will be 100+. That\'s fine and expected.'],
+        ]},
+      ],
     },
   ],
 
@@ -267,5 +284,5 @@ const DATA = {
   restWeekMondays: ['2025-03-31'],
 
   // ── DASHBOARD ──
-  nextSessionFocus: '🎯 <strong>Rest week (31 Mar – 6 Apr):</strong> Week 2 complete — both pool sessions hit Swolf &lt;80 (avg 76.9). Rest week as planned. Week 3 starts Tue 8 Apr (gym) with Pool Session C on Fri 11 Apr: 75m or 100m reps.',
+  nextSessionFocus: '🎯 <strong>Next session (11 Apr — Pool Session C):</strong> First 100m reps with the new technique. 8 × 100m, target Swolf &lt;82. Reps 1–3 at 45s rest to find the rhythm, reps 4–8 at 40s. Key question: does the catch hold on the second length?',
 };

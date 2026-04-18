@@ -4,7 +4,7 @@
 
 const DATA = {
   // Pin "today" to training timeline (month is 0-indexed)
-  today: new Date(2025, 2, 28), // 28 Mar 2025
+  today: new Date(2025, 3, 11), // 11 Apr 2025
 
   goal: { baseline: '7:45', target: '7:30', phase: 1, totalPhases: 4 },
 
@@ -85,6 +85,21 @@ const DATA = {
       ]
     },
     {
+      date:'2025-04-11', label:'11 Apr', lapCount:7, distance:'700m',
+      avgSwolf:83.3, avgStrokes:24.9, avgHR:148, tag:'7×100m',
+      summary:'Pool Session C complete — first 100m rep session. 7 of 8 planned reps executed. Swolf 81–86 across all reps (avg 83.3), above the 50m baseline but within the expected range for a new distance with turns. The standout finding: the second 50m of every single rep was faster and more efficient than the first. Rep 1 first 50m: Swolf 86 / 1:00.7 → second 50m: Swolf 78 / 0:55.0. Rep 4: first 50m Swolf 90 → second 50m Swolf 75. The catch is holding and even improving mid-rep, which is the opposite of the feared technique breakdown. Stroke count 24–25 for reps 1–5, rising to 26 on reps 6–7 — normal fatigue progression. HR climbed steadily from 135 (rep 1) to 155 (rep 6), well above Zone 2 — this was a real effort session.',
+      drills:'🏃 Warm-up + drill block (Interval 1) — 1,000m over 20:04. 28 sub-laps with varied intensities: push-off sprints, build laps, drill sets and rest intervals. Excluded from lap stats.\n\n❄️ Cool-down (Interval 9) — 200m: sub-laps showed Swolf 32 (push-off sprint), 73 (moderate), 102, 119 (deliberate slow cool-down laps). HR falling. Excluded from lap stats.',
+      laps:[
+        {n:1,dist:100,t:'1:55.7',sw:82,st:24,hr:135},
+        {n:2,dist:100,t:'1:54.3',sw:81,st:24,hr:148},
+        {n:3,dist:100,t:'1:57.3',sw:84,st:25,hr:156},
+        {n:4,dist:100,t:'1:56.8',sw:82,st:24,hr:142},
+        {n:5,dist:100,t:'1:56.1',sw:83,st:25,hr:150},
+        {n:6,dist:100,t:'1:58.5',sw:85,st:26,hr:155},
+        {n:7,dist:100,t:'2:00.1',sw:86,st:26,hr:151},
+      ]
+    },
+    {
       date:'2025-03-28', label:'28 Mar', lapCount:10, distance:'500m',
       avgSwolf:76.9, avgStrokes:22.6, avgHR:150, tag:'10×50m',
       summary:'Pool Session B completed — all 10 planned reps executed. Swolf held 74–78 throughout, every lap under the <80 target. Best lap: Lap 3 (Swolf 74, 21 strokes — personal best strokes). Strokes 21–22 for first 6 laps, creeping to 23–25 with fatigue on laps 7–10. HR steady at avg 150. Pattern from Wednesday confirmed and sustained across the full planned set for the first time.',
@@ -135,26 +150,22 @@ const DATA = {
       ],
     },
     {
-      id:'pool-c', week:3, title:'Pool Session C', date:'11 Apr', status:'current',
-      kpis:[{l:'Total',v:'~1,600m'},{l:'Main set',v:'8×100m'},{l:'Swolf target',v:'< 82'},{l:'Str target',v:'≤ 23/50m'}],
-      focusPlan:'🎯 <strong>Session focus:</strong> First test of whether the catch holds across a full 100m. You\'re not swimming faster — same technique, just twice per length. Target Swolf &lt;82 (deliberately relaxed vs your recent 76–78 on 50m — the turn and second length add real fatigue). If you hit &lt;80 on most laps, that\'s exceptional.',
-      coachNote:'🧠 <strong>Coach note:</strong> 8 reps rather than 10 — intentional. First session back after rest week at a new distance is enough load. Stop at 8 if form degrades on the second 50m of any rep. After the session, note which 50m felt harder — first or second. That shapes Session D.',
+      id:'pool-c', week:3, title:'Pool Session C', date:'11 Apr', status:'done',
+      kpis:[{l:'Total',v:'~1,900m'},{l:'Reps done',v:'7/8'},{l:'Avg Swolf',v:'83.3'},{l:'2nd 50m',v:'always better'}],
+      focusResult:'✅ <strong>Session result:</strong> 7 of 8 planned reps completed. Swolf 81–86 (avg 83.3) — above the 50m baseline as expected. Key finding: the second 50m of every rep was consistently faster and more efficient than the first. The catch held across 100m. Stroke count 24–25 for reps 1–5, rising to 26 on final two reps.',
+      coachNote:'🧠 <strong>Coach note:</strong> The second 50m being better than the first is a strong signal — technique is consolidating mid-rep, not degrading. Session D can stay at 100m and push toward 8–10 reps. The first 50m is the one to improve: Swolf 83–90 on the opening 50m vs 75–85 on the closing 50m suggests the first stroke off the wall is the weaker point.',
       sections:[
-        {label:'Warm-up · 200m', type:'plan-table', headers:['Exercise','Distance','Notes'], rows:[
-          ['<span class="badge gray">Easy freestyle</span>','200m','Easy pace, no targets. On the second length of each 100m, count your strokes — gives a clean baseline before the drill block.<div class="cue">No pressure. Just wake up the feel.</div>'],
+        {label:'Warm-up + Drills · Interval 1 · 1,000m · 20:04', type:'simple-table', headers:['Block','Notes'], rows:[['<strong>Warm-up + full drill block</strong>','1,000m over 20:04. 28 sub-laps: push-off sprints, build laps, drill sets, rest intervals. Full block excluded from lap stats.']]},
+        {label:'Main set · 7 × 100m', type:'results-table', headers:['Rep','Time','Swolf','1st 50m','2nd 50m','HR'], rows:[
+          ['1','1:55.7',{v:'82',c:'green'},'1:00.7 / sw86','0:55.0 / sw78','135'],
+          ['2','1:54.3',{v:'81',c:'green'},'1:00.2 / sw83','0:54.1 / sw79','148'],
+          ['3','1:57.3',{v:'84',c:'amber'},'1:01.3 / sw86','0:56.0 / sw81','156'],
+          ['4','1:56.8',{v:'82',c:'green'},'1:04.7 / sw90','0:52.1 / sw75','142'],
+          ['5','1:56.1',{v:'83',c:'amber'},'0:58.9 / sw83','0:57.1 / sw82','150'],
+          ['6','1:58.5',{v:'85',c:'amber'},'1:00.7 / sw88','0:57.8 / sw83','155'],
+          ['7','2:00.1',{v:'86',c:'amber'},'1:01.2 / sw86','0:58.9 / sw85','151'],
         ]},
-        {label:'Drill block · 500m', type:'plan-table', headers:['Drill','Set','Rest','Coaching cue'], rows:[
-          ['<strong>Fingertip drag</strong><div class="note">snorkel + fins</div>','<span class="badge blue">4 × 50m</span>','20s','Use fins to slow the recovery and feel the entry on every stroke. Snorkel removes breathing — all focus on the arm path.<div class="cue">Entry fingertips first, elbow high. Same feel as your best 26 Mar laps.</div>'],
-          ['<strong>Fist drill</strong><div class="note">snorkel only</div>','<span class="badge blue">2 × 50m</span>','20s','Your reset drill — if the catch feels lost in the main set, this is the feeling you return to.<div class="cue">Forearm pressure backward, not downward.</div>'],
-          ['<strong>Pull finish pause</strong><div class="note">fins only</div>','<span class="badge blue">4 × 50m</span>','25s','After every 3rd stroke, pause and complete the pull fully past the hip. Especially important today — 100m reps mean the finish degrades on the second length when tired.<div class="cue">Hand must pass the hip every time. Feel the tricep at the finish.</div>'],
-        ]},
-        {label:'Main set · 8 × 100m', type:'plan-table', headers:['Set','Distance','Rest','Targets'], rows:[
-          ['<span class="badge amber">Reps 1–3</span><div class="note">Feel-out block</div>','3 × 100m','45s','Slightly longer rest — learning the 100m rhythm for the first time with this technique. Swolf &lt;82, strokes ≤23 on both 50m halves.<div class="cue amber">After rep 1: did the catch hold on the second length? That\'s the only question.</div>'],
-          ['<span class="badge amber">Reps 4–8</span><div class="note">Groove block</div>','5 × 100m','40s','Drop to 40s — matching your natural wall time from recent sessions. Same targets. If stroke count on second 50m goes above 25, take an extra 15s — no heroics.<div class="cue amber">If a rep feels perfect — remember exactly what you did. That\'s the template for Week 4.</div>'],
-        ]},
-        {label:'Cool-down · 100m', type:'plan-table', headers:['Exercise','Distance','Focus'], rows:[
-          ['<span class="badge gray">Easy</span>','100m','Very slow. Think only about the finish — hand exits past hip every stroke. Swolf will be 100+. That\'s fine and expected.'],
-        ]},
+        {label:'Cool-down · Interval 9 · 200m', type:'simple-table', headers:['Notes'], rows:[['4 lengths mixed: push-off sprint, moderate lap, then 2 very slow (Swolf 102, 119). Normal fatigue cool-down. HR falling. Excluded from lap stats.']]},
       ],
     },
   ],
@@ -232,8 +243,8 @@ const DATA = {
       },
     },
     {
-      week:3, monDate:'8 Apr', monDay:'Tuesday', thuDate:'10 Apr', status:'planned',
-      monNote:'⚠️ Coach swim in morning — gym in afternoon',
+      week:3, monDate:'8 Apr', monDay:'Tuesday', thuDate:'10 Apr', status:'done',
+      monNote:'⚠️ Tuesday session skipped — Thursday only this week.',
       monExercises: {
         warmup:[
           {name:'Band pull-aparts',sets:'3 × 20',cue:'Arms straight, pull to chest. Squeeze shoulder blades at end range.',video:'band+pull+apart+shoulder'},
@@ -256,9 +267,9 @@ const DATA = {
         ],
         main:[
           {name:'TRX / ring fallout',sets:'3 × 10',cue:'Anterior shoulder stability — holds elbow up against water resistance.<div class="cue amber">The harder this feels, the more you need it.</div>',video:'TRX+fallout+exercise'},
-          {name:'Face pulls',note:'Cable · rope attachment',sets:'3 × 15',cue:'Pull rope to face, elbows high and wide. Elbows finish ABOVE the hands.',video:'face+pulls+cable+rotator+cuff',weights:{last:'6.125 kg',today:'7.25 kg'}},
-          {name:'Single-arm cable row',note:'20–30% lighter than Tuesday',sets:'3 × 12',cue:'Perfect elbow position — no compensating with the shoulder.<div class="cue amber">Quality over load today.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'8.625 kg',today:'9.75 kg'}},
-          {name:'Side-lying external rotation',note:'Dumbbell · each side',sets:'3 × 15',cue:'Lie on side, elbow at 90°. Rotate dumbbell upward slowly.<div class="cue amber">Light weight. Slow and controlled. Never rush this one.</div>',video:'side+lying+external+rotation+rotator+cuff',weights:{last:'3 kg',today:'4 kg'}},
+          {name:'Face pulls',note:'Cable · rope attachment',sets:'3 × 15',cue:'Pull rope to face, elbows high and wide. Elbows finish ABOVE the hands.',video:'face+pulls+cable+rotator+cuff',weights:{done:'✓ 10 Apr: 7.25 kg'}},
+          {name:'Single-arm cable row',note:'20–30% lighter than Tuesday',sets:'3 × 12',cue:'Perfect elbow position — no compensating with the shoulder.<div class="cue amber">Quality over load today.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{done:'✓ 10 Apr: 9.75 kg'}},
+          {name:'Side-lying external rotation',note:'Dumbbell · each side',sets:'3 × 15',cue:'Lie on side, elbow at 90°. Rotate dumbbell upward slowly.<div class="cue amber">Light weight. Slow and controlled. Never rush this one.</div>',video:'side+lying+external+rotation+rotator+cuff',weights:{done:'✓ 10 Apr: 4 kg'}},
         ],
         finisher:[
           {name:'Plank to downward dog',sets:'3 × 10',cue:'From plank, push hips up slowly. Shoulders packed — no shrugging.',video:'plank+to+downward+dog+exercise'},
@@ -284,5 +295,5 @@ const DATA = {
   restWeekMondays: ['2025-03-31'],
 
   // ── DASHBOARD ──
-  nextSessionFocus: '🎯 <strong>Next session (11 Apr — Pool Session C):</strong> First 100m reps with the new technique. 8 × 100m, target Swolf &lt;82. Reps 1–3 at 45s rest to find the rhythm, reps 4–8 at 40s. Key question: does the catch hold on the second length?',
+  nextSessionFocus: '✅ <strong>Pool Session C done (11 Apr):</strong> 7×100m, avg Swolf 83.3. Second 50m better than first on every rep — catch held. Session D coming up: discuss results in Claude Chat to shape the next session plan.',
 };

@@ -85,7 +85,20 @@ const DATA = {
       ]
     },
     {
-      date:'2025-04-11', label:'11 Apr', lapCount:7, distance:'700m',
+      date:'2025-03-28', label:'28 Mar', lapCount:10, distance:'500m',
+      avgSwolf:76.9, avgStrokes:22.6, avgHR:150, tag:'10×50m',
+      summary:'Pool Session B completed — all 10 planned reps executed. Swolf held 74–78 throughout, every lap under the <80 target. Best lap: Lap 3 (Swolf 74, 21 strokes — personal best strokes). Strokes 21–22 for first 6 laps, creeping to 23–25 with fatigue on laps 7–10. HR steady at avg 150. Pattern from Wednesday confirmed and sustained across the full planned set for the first time.',
+      drills:'🏃 Warm-up + drill block (Interval 1) — 1,000m over 22:37. 20 sub-laps with varied intensities: push-off sprints, build laps, drill sets and rest intervals. Full fingertip drag and fist drill block included. Excluded from lap stats.\n\n❄️ Cool-down (Interval 12) — 200m mixed: 3 moderate laps (0:30–0:34) + 1 slow cool-down (1:23, Swolf 108). HR 148–155. Normal fatigue. Excluded from lap stats.',
+      laps:[
+        {n:1,dist:50,t:'0:53.9',sw:76,st:22,hr:133},{n:2,dist:50,t:'0:53.7',sw:76,st:22,hr:140},
+        {n:3,dist:50,t:'0:53.3',sw:74,st:21,hr:152},{n:4,dist:50,t:'0:55.7',sw:78,st:22,hr:151},
+        {n:5,dist:50,t:'0:55.6',sw:78,st:22,hr:155},{n:6,dist:50,t:'0:53.9',sw:77,st:23,hr:152},
+        {n:7,dist:50,t:'0:55.3',sw:78,st:23,hr:157},{n:8,dist:50,t:'0:55.0',sw:78,st:23,hr:155},
+        {n:9,dist:50,t:'0:52.7',sw:76,st:23,hr:155},{n:10,dist:50,t:'0:53.1',sw:78,st:25,hr:151},
+      ]
+    },
+    {
+      date:'2025-04-17', label:'17 Apr', lapCount:7, distance:'700m',
       avgSwolf:83.4, avgStrokes:24.6, avgHR:148, tag:'7×100m',
       summary:'Pool Session C — first 100m session. 7 reps completed. Avg Swolf 83.4, strokes 24.6. The defining pattern: first 50m of every rep was consistently worse than the second (avg Swolf 86 on the first 50m vs 80 on the second). Rep 4 was the starkest example — first 50m Swolf 90, second 50m Swolf 75. Rests ran long: 44–141 seconds between reps. Key insight: technique isn\'t degrading mid-rep — it degrades at the start of each rep due to tension, then recovers naturally in the second length. This points to a reset problem between reps, not an endurance problem. The catch and pull are working once the body settles. Session D focus: remove the tension at the start of each rep.',
       drills:'🏃 Warm-up + drill block (Interval 1) — 1,000m over 20:04. 28 sub-laps with varied intensities: push-off sprints, build laps, drill sets and rest intervals. Excluded from lap stats.\n\n❄️ Cool-down (Interval 9) — 200m mixed: sub-laps showed Swolf 32 (push-off sprint), 73 (moderate), 102, 119 (deliberate slow cool-down). HR falling. Excluded from lap stats.',
@@ -97,19 +110,6 @@ const DATA = {
         {n:5,dist:100,t:'1:56.1',sw:83,st:25,hr:150},
         {n:6,dist:100,t:'1:58.5',sw:85,st:26,hr:155},
         {n:7,dist:100,t:'2:00.1',sw:86,st:26,hr:151},
-      ]
-    },
-    {
-      date:'2025-03-28', label:'28 Mar', lapCount:10, distance:'500m',
-      avgSwolf:76.9, avgStrokes:22.6, avgHR:150, tag:'10×50m',
-      summary:'Pool Session B completed — all 10 planned reps executed. Swolf held 74–78 throughout, every lap under the <80 target. Best lap: Lap 3 (Swolf 74, 21 strokes — personal best strokes). Strokes 21–22 for first 6 laps, creeping to 23–25 with fatigue on laps 7–10. HR steady at avg 150. Pattern from Wednesday confirmed and sustained across the full planned set for the first time.',
-      drills:'🏃 Warm-up + drill block (Interval 1) — 1,000m over 22:37. 20 sub-laps with varied intensities: push-off sprints, build laps, drill sets and rest intervals. Full fingertip drag and fist drill block included. Excluded from lap stats.\n\n❄️ Cool-down (Interval 12) — 200m mixed: 3 moderate laps (0:30–0:34) + 1 slow cool-down (1:23, Swolf 108). HR 148–155. Normal fatigue. Excluded from lap stats.',
-      laps:[
-        {n:1,dist:50,t:'0:53.9',sw:76,st:22,hr:133},{n:2,dist:50,t:'0:53.7',sw:76,st:22,hr:140},
-        {n:3,dist:50,t:'0:53.3',sw:74,st:21,hr:152},{n:4,dist:50,t:'0:55.7',sw:78,st:22,hr:151},
-        {n:5,dist:50,t:'0:55.6',sw:78,st:22,hr:155},{n:6,dist:50,t:'0:53.9',sw:77,st:23,hr:152},
-        {n:7,dist:50,t:'0:55.3',sw:78,st:23,hr:157},{n:8,dist:50,t:'0:55.0',sw:78,st:23,hr:155},
-        {n:9,dist:50,t:'0:52.7',sw:76,st:23,hr:155},{n:10,dist:50,t:'0:53.1',sw:78,st:25,hr:151},
       ]
     },
   ],
@@ -150,7 +150,7 @@ const DATA = {
       ],
     },
     {
-      id:'pool-c', week:3, title:'Pool Session C', date:'11 Apr', status:'done',
+      id:'pool-c', week:3, title:'Pool Session C', date:'17 Apr', status:'done',
       kpis:[{l:'Total',v:'~1,900m'},{l:'Reps done',v:'7/8'},{l:'Avg Swolf',v:'83.3'},{l:'2nd 50m',v:'always better'}],
       focusResult:'✅ <strong>Session result:</strong> 7 reps completed. Avg Swolf 83.4, strokes 24.6. First 50m of every rep worse than second (avg Swolf 86 vs 80). Rests ran long — 44–141 seconds. Technique doesn\'t degrade mid-rep; it degrades at the <em>start</em> of each rep due to tension, then recovers naturally in the second length.',
       coachNote:'🧠 <strong>Coach note:</strong> This is a reset problem, not an endurance problem. The catch and pull are working once the body settles — the issue is tension off the wall and after rest. Session D switches to 12×50m with a feel-first focus — no stroke counting during reps. Goal: find what a relaxed, tension-free start feels like and replicate it.',

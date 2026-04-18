@@ -4,7 +4,7 @@
 
 const DATA = {
   // Pin "today" to training timeline (month is 0-indexed)
-  today: new Date(2025, 3, 11), // 11 Apr 2025
+  today: new Date(2025, 3, 18), // 18 Apr 2025
 
   goal: { baseline: '7:45', target: '7:30', phase: 1, totalPhases: 4 },
 
@@ -86,9 +86,9 @@ const DATA = {
     },
     {
       date:'2025-04-11', label:'11 Apr', lapCount:7, distance:'700m',
-      avgSwolf:83.3, avgStrokes:24.9, avgHR:148, tag:'7×100m',
-      summary:'Pool Session C complete — first 100m rep session. 7 of 8 planned reps executed. Swolf 81–86 across all reps (avg 83.3), above the 50m baseline but within the expected range for a new distance with turns. The standout finding: the second 50m of every single rep was faster and more efficient than the first. Rep 1 first 50m: Swolf 86 / 1:00.7 → second 50m: Swolf 78 / 0:55.0. Rep 4: first 50m Swolf 90 → second 50m Swolf 75. The catch is holding and even improving mid-rep, which is the opposite of the feared technique breakdown. Stroke count 24–25 for reps 1–5, rising to 26 on reps 6–7 — normal fatigue progression. HR climbed steadily from 135 (rep 1) to 155 (rep 6), well above Zone 2 — this was a real effort session.',
-      drills:'🏃 Warm-up + drill block (Interval 1) — 1,000m over 20:04. 28 sub-laps with varied intensities: push-off sprints, build laps, drill sets and rest intervals. Excluded from lap stats.\n\n❄️ Cool-down (Interval 9) — 200m: sub-laps showed Swolf 32 (push-off sprint), 73 (moderate), 102, 119 (deliberate slow cool-down laps). HR falling. Excluded from lap stats.',
+      avgSwolf:83.4, avgStrokes:24.6, avgHR:148, tag:'7×100m',
+      summary:'Pool Session C — first 100m session. 7 reps completed. Avg Swolf 83.4, strokes 24.6. The defining pattern: first 50m of every rep was consistently worse than the second (avg Swolf 86 on the first 50m vs 80 on the second). Rep 4 was the starkest example — first 50m Swolf 90, second 50m Swolf 75. Rests ran long: 44–141 seconds between reps. Key insight: technique isn\'t degrading mid-rep — it degrades at the start of each rep due to tension, then recovers naturally in the second length. This points to a reset problem between reps, not an endurance problem. The catch and pull are working once the body settles. Session D focus: remove the tension at the start of each rep.',
+      drills:'🏃 Warm-up + drill block (Interval 1) — 1,000m over 20:04. 28 sub-laps with varied intensities: push-off sprints, build laps, drill sets and rest intervals. Excluded from lap stats.\n\n❄️ Cool-down (Interval 9) — 200m mixed: sub-laps showed Swolf 32 (push-off sprint), 73 (moderate), 102, 119 (deliberate slow cool-down). HR falling. Excluded from lap stats.',
       laps:[
         {n:1,dist:100,t:'1:55.7',sw:82,st:24,hr:135},
         {n:2,dist:100,t:'1:54.3',sw:81,st:24,hr:148},
@@ -152,8 +152,8 @@ const DATA = {
     {
       id:'pool-c', week:3, title:'Pool Session C', date:'11 Apr', status:'done',
       kpis:[{l:'Total',v:'~1,900m'},{l:'Reps done',v:'7/8'},{l:'Avg Swolf',v:'83.3'},{l:'2nd 50m',v:'always better'}],
-      focusResult:'✅ <strong>Session result:</strong> 7 of 8 planned reps completed. Swolf 81–86 (avg 83.3) — above the 50m baseline as expected. Key finding: the second 50m of every rep was consistently faster and more efficient than the first. The catch held across 100m. Stroke count 24–25 for reps 1–5, rising to 26 on final two reps.',
-      coachNote:'🧠 <strong>Coach note:</strong> The second 50m being better than the first is a strong signal — technique is consolidating mid-rep, not degrading. Session D can stay at 100m and push toward 8–10 reps. The first 50m is the one to improve: Swolf 83–90 on the opening 50m vs 75–85 on the closing 50m suggests the first stroke off the wall is the weaker point.',
+      focusResult:'✅ <strong>Session result:</strong> 7 reps completed. Avg Swolf 83.4, strokes 24.6. First 50m of every rep worse than second (avg Swolf 86 vs 80). Rests ran long — 44–141 seconds. Technique doesn\'t degrade mid-rep; it degrades at the <em>start</em> of each rep due to tension, then recovers naturally in the second length.',
+      coachNote:'🧠 <strong>Coach note:</strong> This is a reset problem, not an endurance problem. The catch and pull are working once the body settles — the issue is tension off the wall and after rest. Session D switches to 12×50m with a feel-first focus — no stroke counting during reps. Goal: find what a relaxed, tension-free start feels like and replicate it.',
       sections:[
         {label:'Warm-up + Drills · Interval 1 · 1,000m · 20:04', type:'simple-table', headers:['Block','Notes'], rows:[['<strong>Warm-up + full drill block</strong>','1,000m over 20:04. 28 sub-laps: push-off sprints, build laps, drill sets, rest intervals. Full block excluded from lap stats.']]},
         {label:'Main set · 7 × 100m', type:'results-table', headers:['Rep','Time','Swolf','1st 50m','2nd 50m','HR'], rows:[
@@ -166,6 +166,28 @@ const DATA = {
           ['7','2:00.1',{v:'86',c:'amber'},'1:01.2 / sw86','0:58.9 / sw85','151'],
         ]},
         {label:'Cool-down · Interval 9 · 200m', type:'simple-table', headers:['Notes'], rows:[['4 lengths mixed: push-off sprint, moderate lap, then 2 very slow (Swolf 102, 119). Normal fatigue cool-down. HR falling. Excluded from lap stats.']]},
+      ],
+    },
+    {
+      id:'pool-d', week:4, title:'Pool Session D', date:'24 Apr', status:'current',
+      kpis:[{l:'Set',v:'12×50m'},{l:'Focus',v:'Feel-first'},{l:'Stroke count',v:'No counting'},{l:'Target',v:'Ease + flow'}],
+      focusPlan:'🎯 <strong>Session focus:</strong> Fix the reset problem identified in Session C. Every rep started tense (Swolf 86 avg on first 50m) and recovered mid-rep (Swolf 80 avg on second 50m). Session D removes the pressure that creates that tension: no stroke counting during reps, no Swolf targets. Swim by feel only. The goal is to find what a relaxed, tension-free start feels like — and then replicate it 12 times.',
+      coachNote:'🧠 <strong>Coach note:</strong> Back to 50m reps deliberately. Not a step backwards — a targeted reset. 12 reps at 50m gives you more opportunities to practise the transition from rest → relaxed swimming than 7 reps at 100m. Count strokes only after each rep if you want, not during. If a rep feels easy and smooth, that\'s the data point that matters.',
+      sections:[
+        {label:'Warm-up · 200m', type:'plan-table', headers:['Exercise','Distance','Notes'], rows:[
+          ['<span class="badge gray">Easy freestyle</span>','200m','No targets. Focus only on how the water feels on your forearm at the catch point.<div class="cue">If you feel the water pushing back on your forearm — not your palm — you\'re in the right position.</div>'],
+        ]},
+        {label:'Drill block · 400m', type:'plan-table', headers:['Drill','Set','Rest','Coaching cue'], rows:[
+          ['<strong>Fist drill</strong><div class="note">snorkel only</div>','<span class="badge blue">4 × 50m</span>','20s','Your reset drill. Forearm pressure backward, not downward. This is the feeling you\'re looking to take into the main set.<div class="cue">Feel the forearm, not the fist. That\'s the whole drill.</div>'],
+          ['<strong>Fingertip drag</strong><div class="note">fins only</div>','<span class="badge blue">4 × 50m</span>','20s','Slow the recovery, feel the entry. Elbow high, fingertips enter first. Focus on the moment after entry — is the forearm angled backward or downward?<div class="cue">Entry is the setup. Get the entry right and the catch follows.</div>'],
+        ]},
+        {label:'Main set · 12 × 50m', type:'plan-table', headers:['Block','Set','Rest','Focus'], rows:[
+          ['<span class="badge green">Feel block</span><div class="note">Reps 1–6</div>','6 × 50m','35–40s','No stroke counting. Swim each rep by feel. After each rep, ask one question only: did that feel easy or tense?<div class="cue green">Rate each rep: 1 = tense, 2 = ok, 3 = easy. That\'s your only data collection.</div>'],
+          ['<span class="badge green">Replicate block</span><div class="note">Reps 7–12</div>','6 × 50m','35s','Try to replicate the best feeling from reps 1–6. Still no counting during reps.<div class="cue green">If rep 3 felt easy — what were you doing? That\'s the template. Copy it.</div>'],
+        ]},
+        {label:'Cool-down · 100m', type:'plan-table', headers:['Exercise','Distance','Focus'], rows:[
+          ['<span class="badge gray">Easy</span>','100m','Very slow. Think about the finish — hand exits past hip every stroke. Swolf will be 100+. Expected.'],
+        ]},
       ],
     },
   ],
@@ -295,5 +317,5 @@ const DATA = {
   restWeekMondays: ['2025-03-31'],
 
   // ── DASHBOARD ──
-  nextSessionFocus: '✅ <strong>Pool Session C done (11 Apr):</strong> 7×100m, avg Swolf 83.3. Second 50m better than first on every rep — catch held. Session D coming up: discuss results in Claude Chat to shape the next session plan.',
+  nextSessionFocus: '🎯 <strong>Next session (24 Apr — Pool Session D):</strong> 12×50m feel-first. No stroke counting during reps. Goal: find a relaxed, tension-free start — the opposite of the tight first 50m seen in Session C. Rate each rep 1–3 by feel only.',
 };

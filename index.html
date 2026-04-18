@@ -599,13 +599,14 @@ function renderCalWeeklyStructure(mk,wPlan,isRW){
   const monClick=gymIdx!==null?`onclick="showTab('gym');gymWeekIdx=${gymIdx+1};updateGymSwitcher()"`:'';
   const thuClick=thuIdx!==null?`onclick="showTab('gym');gymWeekIdx=${thuIdx+1};updateGymSwitcher()"`:'';
   const poolClick=poolIdx!==null?`onclick="showTab('pool');poolWeekIdx=${poolIdx+1};updatePoolSwitcher()"`:'';
+  const noClick='style="cursor:default;opacity:.5;"';
   el.innerHTML=`
-    <div class="session-item" ${monClick}><div class="session-icon gym-mon">💪</div><div class="session-info"><div class="session-name">Monday</div><div class="session-meta">Gym — strength · compound pulling</div></div><div class="session-arrow">→</div></div>
-    <div class="session-item"><div class="session-icon" style="background:var(--purple-light)">👨‍🏫</div><div class="session-info"><div class="session-name">Tuesday</div><div class="session-meta">Pool — with your coach (no card)</div></div><div class="session-arrow" style="color:var(--muted)">—</div></div>
-    <div class="session-item"><div class="session-icon" style="background:var(--gray-light)">😴</div><div class="session-info"><div class="session-name">Wednesday</div><div class="session-meta">Rest / active recovery</div></div></div>
-    <div class="session-item" ${thuClick}><div class="session-icon gym-thu">💪</div><div class="session-info"><div class="session-name">Thursday</div><div class="session-meta">Gym — stability · mobility</div></div><div class="session-arrow">→</div></div>
-    <div class="session-item" ${poolClick}><div class="session-icon pool">🏊</div><div class="session-info"><div class="session-name">Friday</div><div class="session-meta">Pool — your coached session</div></div><div class="session-arrow">→</div></div>
-    <div class="session-item" style="border:none"><div class="session-icon" style="background:var(--gray-light)">😴</div><div class="session-info"><div class="session-name">Sat / Sun</div><div class="session-meta">Rest and recovery</div></div></div>`;
+    <div class="session-item" ${monClick||noClick}><div class="session-icon gym-mon">💪</div><div class="session-info"><div class="session-name">Monday</div><div class="session-meta">Gym — strength · compound pulling</div></div>${monClick?'<div class="session-arrow">→</div>':''}</div>
+    <div class="session-item" style="cursor:default;opacity:.5;"><div class="session-icon" style="background:var(--purple-light)">👨‍🏫</div><div class="session-info"><div class="session-name">Tuesday</div><div class="session-meta">Pool — with your coach (no card)</div></div><div class="session-arrow" style="color:var(--muted)">—</div></div>
+    <div class="session-item" style="cursor:default;opacity:.5;"><div class="session-icon" style="background:var(--gray-light)">😴</div><div class="session-info"><div class="session-name">Wednesday</div><div class="session-meta">Rest / active recovery</div></div></div>
+    <div class="session-item" ${thuClick||noClick}><div class="session-icon gym-thu">💪</div><div class="session-info"><div class="session-name">Thursday</div><div class="session-meta">Gym — stability · mobility</div></div>${thuClick?'<div class="session-arrow">→</div>':''}</div>
+    <div class="session-item" ${poolClick||noClick}><div class="session-icon pool">🏊</div><div class="session-info"><div class="session-name">Friday</div><div class="session-meta">Pool — your coached session</div></div>${poolClick?'<div class="session-arrow">→</div>':''}</div>
+    <div class="session-item" style="cursor:default;opacity:.5;border:none"><div class="session-icon" style="background:var(--gray-light)">😴</div><div class="session-info"><div class="session-name">Sat / Sun</div><div class="session-meta">Rest and recovery</div></div></div>`;
 }
 function changeWeek(d){calWeek+=d;renderCalGrid();}
 

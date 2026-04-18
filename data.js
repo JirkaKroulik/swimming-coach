@@ -299,6 +299,40 @@ const DATA = {
         ],
       },
     },
+    {
+      week:4, monDate:'20 Apr', thuDate:'23 Apr', status:'current',
+      monExercises: {
+        warmup:[
+          {name:'Band pull-aparts',sets:'3 × 20',cue:'Arms straight, pull to chest. Squeeze shoulder blades at end range.',video:'band+pull+apart+shoulder'},
+          {name:'Scapular wall slides',sets:'3 × 15',cue:'Back flat on wall, goalpost arms. Elbows and wrists stay on wall throughout.',video:'scapular+wall+slides'},
+        ],
+        main:[
+          {name:'Single-arm cable row',note:'High pulley · face height',sets:'4 × 12',cue:'Back → lock → pause → pull. Elbow stays high throughout.<div class="cue green">Pulling strength focus. Match or exceed last session load.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'11.25 kg',today:''}},
+          {name:'Prone dumbbell row',note:'Face down on incline bench',sets:'4 × 10',cue:'Elbow straight back, tight to body. No elbow flare.<div class="cue green">Hand tracks under body centreline every rep.</div>',video:'prone+incline+dumbbell+row',weights:{last:'15 kg',today:''}},
+          {name:'Lat pulldown',note:'Wide grip',sets:'4 × 10',cue:'Pull to upper chest, elbows drive down and back.<div class="cue green">Chest tall, slight lean back — no collapsing forward.</div>',video:'lat+pulldown+proper+form',weights:{last:'36.125 kg',today:''}},
+          {name:'Pallof press',note:'Each side',sets:'3 × 12',cue:'Cable at chest height. Resist rotation — hand stays under body.',video:'pallof+press+core+tutorial'},
+        ],
+        finisher:[
+          {name:'Dead hang',note:'Bar hang, passive',sets:'3 × 30 sec',cue:'Simply hang. Decompresses the shoulder after all the pulling work.',video:'dead+hang+shoulder+decompression'},
+        ],
+      },
+      thuExercises: {
+        warmup:[
+          {name:'Arm circles + cross-body swings',sets:'2 × 20',cue:'Slow, controlled. Loosen the shoulder capsule. Both directions.',video:'arm+circles+shoulder+warmup'},
+          {name:'Band pull-aparts',sets:'2 × 20',cue:'Lighter band than Monday. Focus on the squeeze at end range.',video:'band+pull+apart+shoulder'},
+        ],
+        main:[
+          {name:'TRX / ring fallout',sets:'3 × 10',cue:'Anterior shoulder stability — holds elbow up against water resistance.<div class="cue amber">The harder this feels, the more you need it.</div>',video:'TRX+fallout+exercise'},
+          {name:'Face pulls',note:'Cable · rope attachment',sets:'3 × 15',cue:'Pull rope to face, elbows high and wide. Elbows finish ABOVE the hands.',video:'face+pulls+cable+rotator+cuff',weights:{last:'7.25 kg',today:''}},
+          {name:'Single-arm cable row',note:'20–30% lighter than Monday',sets:'3 × 12',cue:'Perfect elbow position — no compensating with the shoulder.<div class="cue amber">Quality over load today.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'9.75 kg',today:''}},
+          {name:'Side-lying external rotation',note:'Dumbbell · each side',sets:'3 × 15',cue:'Lie on side, elbow at 90°. Rotate dumbbell upward slowly.<div class="cue amber">Light weight. Slow and controlled. Never rush this one.</div>',video:'side+lying+external+rotation+rotator+cuff',weights:{last:'4 kg',today:''}},
+        ],
+        finisher:[
+          {name:'Plank to downward dog',sets:'3 × 10',cue:'From plank, push hips up slowly. Shoulders packed — no shrugging.',video:'plank+to+downward+dog+exercise'},
+          {name:'Doorway chest stretch',sets:'3 × 30 sec',cue:'Arms at 90° in doorframe, lean gently. Counteracts forward shoulder posture.',video:'doorway+chest+stretch+swimmer'},
+        ],
+      },
+    },
   ],
 
   // ── CALENDAR CONFIG ──
@@ -308,11 +342,13 @@ const DATA = {
     '2026-04-03':'rest-week','2026-04-04':'rest-week','2026-04-05':'rest-week','2026-04-06':'rest-week',
     '2026-04-07':'rest','2026-04-08':'gym-tue','2026-04-09':'rest',
     '2026-04-10':'gym-thu','2026-04-11':'pool-you','2026-04-12':'rest','2026-04-13':'rest',
+    '2026-04-20':'gym-mon','2026-04-23':'gym-thu','2026-04-24':'pool-you',
   },
   weekPlan: {
     '2026-03-17':{'gym-mon':0,'gym-thu':0,'pool-you':0},
     '2026-03-24':{'gym-mon':1,'gym-thu':1,'pool-you':1},
     '2026-04-07':{'gym-tue':2,'gym-thu':2,'pool-you':2},
+    '2026-04-20':{'gym-mon':3,'gym-thu':3,'pool-you':3},
   },
   restWeekMondays: ['2026-03-31'],
 

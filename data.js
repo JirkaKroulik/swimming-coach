@@ -4,7 +4,7 @@
 
 const DATA = {
   // Pin "today" to training timeline (month is 0-indexed)
-  today: new Date(2026, 3, 18), // 18 Apr 2026
+  today: new Date(2026, 3, 20), // 20 Apr 2026 (Monday, Week 5)
 
   goal: { baseline: '7:45', target: '7:30', phase: 1, totalPhases: 4 },
 
@@ -150,7 +150,7 @@ const DATA = {
       ],
     },
     {
-      id:'pool-c', week:3, title:'Pool Session C', date:'17 Apr', status:'done',
+      id:'pool-c', week:4, title:'Pool Session C', date:'17 Apr', status:'done',
       kpis:[{l:'Total',v:'~1,900m'},{l:'Reps done',v:'7/8'},{l:'Avg Swolf',v:'83.3'},{l:'2nd 50m',v:'always better'}],
       focusResult:'✅ <strong>Session result:</strong> 7 reps completed. Avg Swolf 83.4, strokes 24.6. First 50m of every rep worse than second (avg Swolf 86 vs 80). Rests ran long — 44–141 seconds. Technique doesn\'t degrade mid-rep; it degrades at the <em>start</em> of each rep due to tension, then recovers naturally in the second length.',
       coachNote:'🧠 <strong>Coach note:</strong> This is a reset problem, not an endurance problem. The catch and pull are working once the body settles — the issue is tension off the wall and after rest. Session D switches to 12×50m with a feel-first focus — no stroke counting during reps. Goal: find what a relaxed, tension-free start feels like and replicate it.',
@@ -169,7 +169,7 @@ const DATA = {
       ],
     },
     {
-      id:'pool-d', week:4, title:'Pool Session D', date:'24 Apr', status:'current',
+      id:'pool-d', week:5, title:'Pool Session D', date:'24 Apr', status:'current',
       kpis:[{l:'Set',v:'12×50m'},{l:'Focus',v:'Feel-first'},{l:'Stroke count',v:'No counting'},{l:'Target',v:'Ease + flow'}],
       focusPlan:'🎯 <strong>Session focus:</strong> Fix the reset problem identified in Session C. Every rep started tense (Swolf 86 avg on first 50m) and recovered mid-rep (Swolf 80 avg on second 50m). Session D removes the pressure that creates that tension: no stroke counting during reps, no Swolf targets. Swim by feel only. The goal is to find what a relaxed, tension-free start feels like — and then replicate it 12 times.',
       coachNote:'🧠 <strong>Coach note:</strong> Back to 50m reps deliberately. Not a step backwards — a targeted reset. 12 reps at 50m gives you more opportunities to practise the transition from rest → relaxed swimming than 7 reps at 100m. Count strokes only after each rep if you want, not during. If a rep feels easy and smooth, that\'s the data point that matters.',
@@ -300,16 +300,16 @@ const DATA = {
       },
     },
     {
-      week:4, monDate:'20 Apr', thuDate:'23 Apr', status:'current',
+      week:5, monDate:'20 Apr', thuDate:'23 Apr', status:'current',
       monExercises: {
         warmup:[
           {name:'Band pull-aparts',sets:'3 × 20',cue:'Arms straight, pull to chest. Squeeze shoulder blades at end range.',video:'band+pull+apart+shoulder'},
           {name:'Scapular wall slides',sets:'3 × 15',cue:'Back flat on wall, goalpost arms. Elbows and wrists stay on wall throughout.',video:'scapular+wall+slides'},
         ],
         main:[
-          {name:'Single-arm cable row',note:'High pulley · face height',sets:'4 × 12',cue:'Back → lock → pause → pull. Elbow stays high throughout.<div class="cue green">Pulling strength focus. Match or exceed last session load.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'11.25 kg',today:''}},
-          {name:'Prone dumbbell row',note:'Face down on incline bench',sets:'4 × 10',cue:'Elbow straight back, tight to body. No elbow flare.<div class="cue green">Hand tracks under body centreline every rep.</div>',video:'prone+incline+dumbbell+row',weights:{last:'15 kg',today:''}},
-          {name:'Lat pulldown',note:'Wide grip',sets:'4 × 10',cue:'Pull to upper chest, elbows drive down and back.<div class="cue green">Chest tall, slight lean back — no collapsing forward.</div>',video:'lat+pulldown+proper+form',weights:{last:'36.125 kg',today:''}},
+          {name:'Single-arm cable row',note:'High pulley · face height',sets:'4 × 12',cue:'Back → lock → pause → pull. Elbow stays high throughout.<div class="cue green">Pulling strength focus. Match or exceed last session load.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{done:'✓ 20 Apr: 12.5 kg'}},
+          {name:'Prone dumbbell row',note:'Face down on incline bench',sets:'4 × 10',cue:'Elbow straight back, tight to body. No elbow flare.<div class="cue green">Hand tracks under body centreline every rep.</div>',video:'prone+incline+dumbbell+row',weights:{done:'✓ 20 Apr: 15 kg'}},
+          {name:'Lat pulldown',note:'Wide grip',sets:'4 × 10',cue:'Pull to upper chest, elbows drive down and back.<div class="cue green">Chest tall, slight lean back — no collapsing forward.</div>',video:'lat+pulldown+proper+form',weights:{done:'✓ 20 Apr: 37.5 kg'}},
           {name:'Pallof press',note:'Each side',sets:'3 × 12',cue:'Cable at chest height. Resist rotation — hand stays under body.',video:'pallof+press+core+tutorial'},
         ],
         finisher:[
@@ -355,5 +355,5 @@ const DATA = {
   restWeekMondays: ['2026-03-31'],
 
   // ── DASHBOARD ──
-  nextSessionFocus: '🎯 <strong>Next session (24 Apr — Pool Session D):</strong> 12×50m feel-first. No stroke counting during reps. Goal: find a relaxed, tension-free start — the opposite of the tight first 50m seen in Session C. Rate each rep 1–3 by feel only.',
+  nextSessionFocus: '🎯 <strong>Week 5 · Next: Thu 23 Apr (gym stability) → Fri 24 Apr (Pool Session D):</strong> Monday strength done — Single-arm row 12.5 kg (+1.25), Prone row 15 kg (hold), Lat pulldown 37.5 kg (+1.375). Friday\'s pool: 12×50m feel-first. No stroke counting during reps. Goal: find a relaxed, tension-free start — the opposite of the tight first 50m seen in Session C. Rate each rep 1–3 by feel only.',
 };

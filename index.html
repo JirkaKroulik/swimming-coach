@@ -407,7 +407,8 @@ function initDashCharts(labels,colors){
 }
 
 // ── POOL TAB ──
-let poolWeekIdx=getCurrentWeekNum()||1;
+function findWeekIdx(arr){ const cur=getCurrentWeekNum(); const i=arr.findIndex(x=>x.week===cur); return (i>=0?i:arr.length-1)+1; }
+let poolWeekIdx=findWeekIdx(DATA.poolWeeks);
 
 function renderPoolTab(){
   const pw=DATA.poolWeeks;
@@ -463,7 +464,7 @@ function updatePoolSwitcher(){
 function switchPoolWeek(d){const n=poolWeekIdx+d;if(n<1||n>DATA.poolWeeks.length)return;poolWeekIdx=n;updatePoolSwitcher();window.scrollTo(0,0);}
 
 // ── GYM TAB ──
-let gymWeekIdx=getCurrentWeekNum()||1;
+let gymWeekIdx=findWeekIdx(DATA.gymWeeks);
 
 function renderGymTab(){
   const gw=DATA.gymWeeks;

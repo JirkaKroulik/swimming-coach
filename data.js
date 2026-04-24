@@ -4,7 +4,7 @@
 
 const DATA = {
   // Pin "today" to training timeline (month is 0-indexed)
-  today: new Date(2026, 3, 20), // 20 Apr 2026 (Monday, Week 5)
+  today: new Date(2026, 3, 24), // 24 Apr 2026 (Friday, Week 5, Session D done)
 
   goal: { baseline: '7:45', target: '7:30', phase: 1, totalPhases: 4 },
 
@@ -112,6 +112,25 @@ const DATA = {
         {n:7,dist:100,t:'2:00.1',sw:86,st:26,hr:151},
       ]
     },
+    {
+      date:'2026-04-24', label:'24 Apr', lapCount:11, distance:'550m',
+      avgSwolf:77.0, avgStrokes:22.8, avgHR:146, tag:'11×50m (feel-first)',
+      summary:'Feel-first session — one cue only: forearm pressure backward not downward. Best average HR ever (146 BPM), most consistent rests ever (30–47s, avg 37.9s). Swolf 77.0 matches all-time best average. Stroke count 22.8 identical to best session (26 Mar). The feel-first approach worked — lower HR confirms less tension in the water. Lap 3 personal best Swolf 73. Pattern is stable and repeatable across 11 reps.',
+      drills:'🏃 Drill block (Interval 1) — 500m over 15:24. 16 sub-laps: mix of easy lengths (Swolf 88–89), kick/pull drill laps (Swolf 22–64), rest segments, and one very slow cool-in lap (Swolf 99). Fist-to-open transition and fingertip drag included. Excluded from training stats.\n\n❄️ Cool-down (Interval 13) — 250m broken block with inconsistent sub-laps (Garmin logging error). Excluded from stats.',
+      laps:[
+        {n:1,dist:50,t:'0:52.5',sw:74,st:21,hr:136},
+        {n:2,dist:50,t:'0:55.0',sw:77,st:22,hr:135},
+        {n:3,dist:50,t:'0:51.6',sw:73,st:21,hr:142},
+        {n:4,dist:50,t:'0:55.6',sw:79,st:23,hr:142},
+        {n:5,dist:50,t:'0:53.6',sw:77,st:23,hr:143},
+        {n:6,dist:50,t:'0:56.0',sw:80,st:24,hr:147},
+        {n:7,dist:50,t:'0:52.7',sw:76,st:23,hr:147},
+        {n:8,dist:50,t:'0:54.1',sw:77,st:23,hr:149},
+        {n:9,dist:50,t:'0:54.2',sw:77,st:23,hr:153},
+        {n:10,dist:50,t:'0:55.8',sw:80,st:24,hr:154},
+        {n:11,dist:50,t:'0:52.5',sw:77,st:24,hr:154},
+      ]
+    },
   ],
 
   // ── POOL SESSION CARDS (plan + results) ──
@@ -169,8 +188,9 @@ const DATA = {
       ],
     },
     {
-      id:'pool-d', week:5, title:'Pool Session D', date:'24 Apr', status:'current',
-      kpis:[{l:'Set',v:'12×50m'},{l:'Focus',v:'Feel-first'},{l:'Stroke count',v:'No counting'},{l:'Target',v:'Ease + flow'}],
+      id:'pool-d', week:5, title:'Pool Session D', date:'24 Apr', status:'done',
+      kpis:[{l:'Reps done',v:'11/11'},{l:'Avg Swolf',v:'77.0'},{l:'Avg HR',v:'146'},{l:'Rest range',v:'30–47s'}],
+      focusResult:'✅ <strong>Session result:</strong> Feel-first cue worked perfectly. Swolf 77.0 average, HR 146 BPM (lowest ever), rests 30–47s (most consistent ever). 11/11 reps completed. Pattern stable and repeatable. The single "forearm backward" cue removed tension from the water.',
       focusPlan:'🎯 <strong>Session focus:</strong> Fix the reset problem identified in Session C. Every rep started tense (Swolf 86 avg on first 50m) and recovered mid-rep (Swolf 80 avg on second 50m). Session D removes the pressure that creates that tension: no stroke counting during reps, no Swolf targets. Swim by feel only. The goal is to find what a relaxed, tension-free start feels like — and then replicate it 12 times.',
       coachNote:'🧠 <strong>Coach note:</strong> Back to 50m reps deliberately. Not a step backwards — a targeted reset. 12 reps at 50m gives you more opportunities to practise the transition from rest → relaxed swimming than 7 reps at 100m. Count strokes only after each rep if you want, not during. If a rep feels easy and smooth, that\'s the data point that matters.',
       sections:[
@@ -187,6 +207,35 @@ const DATA = {
         ]},
         {label:'Cool-down · 100m', type:'plan-table', headers:['Exercise','Distance','Focus'], rows:[
           ['<span class="badge gray">Easy</span>','100m','Very slow. Think about the finish — hand exits past hip every stroke. Swolf will be 100+. Expected.'],
+        ]},
+      ],
+    },
+    {
+      id:'pool-e', week:6, title:'Pool Session E', date:'9 May', status:'planned',
+      kpis:[{l:'Total',v:'~1,500m'},{l:'Main set',v:'4+2+2×100m'},{l:'Swolf target',v:'< 80'},{l:'Key metric',v:'1st = 2nd'}],
+      focusPlan:'🎯 <strong>The bridge session:</strong> Broken 100m — 50m + 10s wall touch + 50m. Your data shows first 50m Swolf averages 86, second 50m averages 80 on full 100m reps. The wall touch gives you a deliberate reset point. Goal: make both halves match. Block 1 = 10s pause, Block 2 = 5s pause, Block 3 = 2 full 100m (optional, only if Blocks 1–2 feel controlled).',
+      coachNote:'🧠 <strong>Coach note:</strong> The broken swim teaches the brain that long reps are just short reps joined together. Your second 50m has been Swolf 80 or better in every 100m session — the pattern is there. The wall touch gives you calm artificially until the nervous system learns it doesn\'t need it. Session F removes the crutch entirely.',
+      sections:[
+        {label:'Warm-up · 200m', type:'plan-table', headers:['Exercise','Distance','Notes'], rows:[
+          ['<span class="badge gray">Easy freestyle</span>','200m','No targets. Feel where the forearm pressure lands on each length. Waking up the pattern you\'ve already built.<div class="cue">Forearm backward — find it early, let it settle.</div>'],
+        ]},
+        {label:'Drill block · 400m', type:'plan-table', headers:['Drill','Set','Rest','Coaching cue'], rows:[
+          ['<strong>Fist → open transition</strong><div class="note">no snorkel, no fins</div>','<span class="badge blue">2 × 50m</span>','20s','First 25m fists closed. At the turn open hands — pressure stays identical. Calibration drill to wake up the catch before paddles go on.<div class="cue">Lock in the forearm feeling here. Paddles will amplify it next.</div>'],
+          ['<strong>Fingertip drag + paddles</strong><div class="note">paddles only · no snorkel, no fins</div>','<span class="badge blue">2 × 50m</span>','25s','Paddles make a bad catch angle immediately obvious — the blade slips sideways if the elbow drops. Keep the catch angle from the fist drill and let the paddle reward you with strong backward pressure.<div class="cue amber">If the paddle feels like it\'s pulling your arm down — elbow has dropped. Stop, reset, push off again.</div><div class="note">⚠️ Easy pace only. Paddles off after these 2 reps — shoulders need to be fresh for the main set.</div>'],
+          ['<strong>Fingertip drag</strong><div class="note">snorkel + fins · no paddles</div>','<span class="badge blue">4 × 50m</span>','20s','Paddles are off — can the forearm replicate the same backward pressure without them? This is the transfer test. If it stays the same, the pattern is in the body not the equipment.<div class="cue">Entry relaxed. Elbow high. Same angle as the paddle reps. Carry this feeling straight into the main set.</div>'],
+        ]},
+        {label:'Block 1 · 4 × broken 100m · 10s pause', type:'plan-table', headers:['Set','Structure','Rest','Target'], rows:[
+          ['<span class="badge green">Reps 1–2</span><div class="note">Learn the rhythm</div>','2 × (50m + 10s + 50m)','45s','Get used to the format. No pressure on numbers — notice whether the second 50m feels as calm as a standalone rep.<div class="cue">After rep 1: did the second push-off feel relaxed or tense? That\'s the only question.</div>'],
+          ['<span class="badge green">Reps 3–4</span><div class="note">Match the halves</div>','2 × (50m + 10s + 50m)','40s','Aim for first half Swolf = second half Swolf. Both halves target &lt;80. Use the 10s pause deliberately — one breath, reset shoulders, then go.<div class="cue green">Stroke 1 of the second 50m sets the pattern for the whole length. Catch it early.</div>'],
+        ]},
+        {label:'Block 2 · 2 × broken 100m · 5s pause', type:'plan-table', headers:['Set','Structure','Rest','Target'], rows:[
+          ['<span class="badge amber">Reps 5–6</span><div class="note">Shrink the pause</div>','2 × (50m + 5s + 50m)','40s','Quick touch, one breath, go. The catch needs to be ready on stroke 1 of the second 50m — not stroke 3.<div class="cue amber">If tension creeps back — you\'re going too fast. Slow the entry down. Speed comes later.</div>'],
+        ]},
+        {label:'Block 3 · 2 × full 100m · optional', type:'plan-table', headers:['Set','Structure','Rest','Target'], rows:[
+          ['<span class="badge blue">Reps 7–8</span><div class="note">Only if Blocks 1–2 felt controlled</div>','2 × 100m','45s','No pause. The turn is just a turn. At 50m, touch and go — the catch should already be waiting on the other side. If this doesn\'t feel right, swap for 4 × 50m instead. No ego.<div class="cue">You\'ve done the second 50m perfectly dozens of times. The only difference is there\'s no wall rest before it.</div>'],
+        ]},
+        {label:'Cool-down · 200m', type:'plan-table', headers:['Exercise','Distance','Focus'], rows:[
+          ['<span class="badge gray">Easy</span>','200m','Very slow. Hand past the hip every stroke. Before looking at Garmin — ask yourself: in Block 3, did the first 50m feel different to 11 Apr? That answer shapes Session F.'],
         ]},
       ],
     },
@@ -344,6 +393,8 @@ const DATA = {
     '2026-04-10':'gym-thu','2026-04-12':'rest','2026-04-13':'rest',
     '2026-04-16':'gym-thu','2026-04-17':'pool-you',
     '2026-04-20':'gym-mon','2026-04-23':'gym-thu','2026-04-24':'pool-you',
+    '2026-04-27':'rest-week','2026-04-28':'rest-week','2026-04-29':'rest-week','2026-04-30':'rest-week',
+    '2026-05-01':'rest-week','2026-05-02':'rest-week','2026-05-03':'rest-week',
   },
   weekPlan: {
     '2026-03-17':{'gym-mon':0,'gym-thu':0,'pool-you':0},
@@ -352,8 +403,8 @@ const DATA = {
     '2026-04-13':{'gym-thu':2,'pool-you':2},
     '2026-04-20':{'gym-mon':3,'gym-thu':3,'pool-you':3},
   },
-  restWeekMondays: ['2026-03-31'],
+  restWeekMondays: ['2026-03-31','2026-04-27'],
 
   // ── DASHBOARD ──
-  nextSessionFocus: '🎯 <strong>Week 5 · Next: Thu 23 Apr (gym stability) → Fri 24 Apr (Pool Session D):</strong> Monday strength done — Single-arm row 12.5 kg (+1.25), Prone row 15 kg (hold), Lat pulldown 37.5 kg (+1.375). Friday\'s pool: 12×50m feel-first. No stroke counting during reps. Goal: find a relaxed, tension-free start — the opposite of the tight first 50m seen in Session C. Rate each rep 1–3 by feel only.',
+  nextSessionFocus: '🎯 <strong>Next session (9 May — Pool Session E):</strong> The bridge session. Broken 100m: 50m + 10s wall touch + 50m. Goal is to make first and second 50m Swolf match. Drill block includes paddles for the first time — 2 × 50m only, easy pace. Block 1: 4 reps with 10s pause. Block 2: 2 reps with 5s pause. Block 3: 2 full 100m (optional).',
 };

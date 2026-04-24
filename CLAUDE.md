@@ -100,6 +100,21 @@ Each exercise: `{ name, note, sets, cue, video, weights: { last, today } | { don
 
 Also add to `DATA.weekPlan` mapping and `DATA.dateOverrides` if the week has non-standard days.
 
+## Auto-setup checklist (run on EVERY session log, no reminder needed)
+
+When the user uploads a CSV or logs a completed pool/gym session, ALWAYS do all of the following automatically in the same change — do NOT wait to be asked:
+
+1. **Verify the next pool session date is a real Friday.** Compute the weekday from the ISO date; if it isn't Friday, fix the `date` string in the pool object AND any matching reference in `nextSessionFocus`.
+2. **Advance `DATA.today`** to the logged session's date (ISO format).
+3. **Add a `weekPlan` entry for the Monday of the NEXT training week** so all days 4 May–10 May (for example) are clickable. Key format: `'YYYY-MM-DD'` (the Monday). Value: `{'gym-mon':N,'gym-thu':N,'pool-you':N}` where N is the 0-based index into `gymWeeks`/`poolWeeks`.
+4. **Add a `gymWeeks` entry for the next training week** with planned Mon + Thu exercises. Progress weights sensibly from the last completed week (e.g., +2.5 kg if all reps done clean).
+5. **Add a `poolWeeks` entry for the next session** if not already present, with `status:'planned'`, `focusPlan`, and target KPIs.
+6. **Add `dateOverrides` entries** for any non-standard day (gym on Tue instead of Mon, extra pool Wed, etc.).
+7. **Update `nextSessionFocus`** with the correct next-session date and coaching guidance.
+8. **Mark rest weeks** by adding their Monday ISO date to `restWeekMondays` — DO NOT give them a `weekPlan` entry with a training week index.
+9. **Keep week numbering synchronized** across `gymWeeks[].week`, `poolWeeks[].week`, and the `getCurrentWeekNum()` result. Rest weeks are skipped in training-week numbering.
+10. **Commit and push** with a message covering all changes. The user should never have to ask "why can't I click on X date" or "why is the date wrong" — catch these before they do.
+
 ## How to Add a Pool Week
 
 Add to `DATA.poolWeeks` array:

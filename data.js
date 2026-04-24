@@ -211,7 +211,7 @@ const DATA = {
       ],
     },
     {
-      id:'pool-e', week:6, title:'Pool Session E', date:'9 May', status:'planned',
+      id:'pool-e', week:6, title:'Pool Session E', date:'8 May', status:'planned',
       kpis:[{l:'Total',v:'~1,500m'},{l:'Main set',v:'4+2+2×100m'},{l:'Swolf target',v:'< 80'},{l:'Key metric',v:'1st = 2nd'}],
       focusPlan:'🎯 <strong>The bridge session:</strong> Broken 100m — 50m + 10s wall touch + 50m. Your data shows first 50m Swolf averages 86, second 50m averages 80 on full 100m reps. The wall touch gives you a deliberate reset point. Goal: make both halves match. Block 1 = 10s pause, Block 2 = 5s pause, Block 3 = 2 full 100m (optional, only if Blocks 1–2 feel controlled).',
       coachNote:'🧠 <strong>Coach note:</strong> The broken swim teaches the brain that long reps are just short reps joined together. Your second 50m has been Swolf 80 or better in every 100m session — the pattern is there. The wall touch gives you calm artificially until the nervous system learns it doesn\'t need it. Session F removes the crutch entirely.',
@@ -382,6 +382,40 @@ const DATA = {
         ],
       },
     },
+    {
+      week:6, monDate:'4 May', thuDate:'7 May', status:'planned',
+      monExercises: {
+        warmup:[
+          {name:'Band pull-aparts',sets:'3 × 20',cue:'Arms straight, pull to chest. Squeeze shoulder blades at end range.',video:'band+pull+apart+shoulder'},
+          {name:'Scapular wall slides',sets:'3 × 15',cue:'Back flat on wall, goalpost arms. Elbows and wrists stay on wall throughout.',video:'scapular+wall+slides'},
+        ],
+        main:[
+          {name:'Single-arm cable row',note:'High pulley · face height',sets:'4 × 12',cue:'Back → lock → pause → pull. Elbow stays high throughout.<div class="cue green">Back from rest week — match 20 Apr load first, add weight only if form is perfect.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'12.5 kg',today:''}},
+          {name:'Prone dumbbell row',note:'Face down on incline bench',sets:'4 × 10',cue:'Elbow straight back, tight to body. No elbow flare.<div class="cue green">Time to progress — try 17.5 kg if 15 felt controlled last time.</div>',video:'prone+incline+dumbbell+row',weights:{last:'15 kg',today:''}},
+          {name:'Lat pulldown',note:'Wide grip',sets:'4 × 10',cue:'Pull to upper chest, elbows drive down and back.<div class="cue green">Chest tall, slight lean back — no collapsing forward.</div>',video:'lat+pulldown+proper+form',weights:{last:'37.5 kg',today:''}},
+          {name:'Pallof press',note:'Each side',sets:'3 × 12',cue:'Cable at chest height. Resist rotation — hand stays under body.',video:'pallof+press+core+tutorial'},
+        ],
+        finisher:[
+          {name:'Dead hang',note:'Bar hang, passive',sets:'3 × 30 sec',cue:'Simply hang. Decompresses the shoulder after all the pulling work.',video:'dead+hang+shoulder+decompression'},
+        ],
+      },
+      thuExercises: {
+        warmup:[
+          {name:'Arm circles + cross-body swings',sets:'2 × 20',cue:'Slow, controlled. Loosen the shoulder capsule. Both directions.',video:'arm+circles+shoulder+warmup'},
+          {name:'Band pull-aparts',sets:'2 × 20',cue:'Lighter band than Monday. Focus on the squeeze at end range.',video:'band+pull+apart+shoulder'},
+        ],
+        main:[
+          {name:'TRX / ring fallout',sets:'3 × 10',cue:'Anterior shoulder stability — holds elbow up against water resistance.<div class="cue amber">The harder this feels, the more you need it.</div>',video:'TRX+fallout+exercise'},
+          {name:'Face pulls',note:'Cable · rope attachment',sets:'3 × 15',cue:'Pull rope to face, elbows high and wide. Elbows finish ABOVE the hands.',video:'face+pulls+cable+rotator+cuff',weights:{last:'7.25 kg',today:''}},
+          {name:'Single-arm cable row',note:'20–30% lighter than Monday',sets:'3 × 12',cue:'Perfect elbow position — no compensating with the shoulder.<div class="cue amber">Quality over load today.</div>',video:'single+arm+high+cable+row+swimming+dryland',weights:{last:'9.75 kg',today:''}},
+          {name:'Side-lying external rotation',note:'Dumbbell · each side',sets:'3 × 15',cue:'Lie on side, elbow at 90°. Rotate dumbbell upward slowly.<div class="cue amber">Light weight. Slow and controlled. Never rush this one.</div>',video:'side+lying+external+rotation+rotator+cuff',weights:{last:'4 kg',today:''}},
+        ],
+        finisher:[
+          {name:'Plank to downward dog',sets:'3 × 10',cue:'From plank, push hips up slowly. Shoulders packed — no shrugging.',video:'plank+to+downward+dog+exercise'},
+          {name:'Doorway chest stretch',sets:'3 × 30 sec',cue:'Arms at 90° in doorframe, lean gently. Counteracts forward shoulder posture.',video:'doorway+chest+stretch+swimmer'},
+        ],
+      },
+    },
   ],
 
   // ── CALENDAR CONFIG ──
@@ -402,9 +436,10 @@ const DATA = {
     '2026-04-07':{'gym-tue':2,'gym-thu':2,'pool-you':2},
     '2026-04-13':{'gym-thu':2,'pool-you':2},
     '2026-04-20':{'gym-mon':3,'gym-thu':3,'pool-you':3},
+    '2026-05-04':{'gym-mon':4,'gym-thu':4,'pool-you':4},
   },
   restWeekMondays: ['2026-03-31','2026-04-27'],
 
   // ── DASHBOARD ──
-  nextSessionFocus: '🎯 <strong>Next session (9 May — Pool Session E):</strong> The bridge session. Broken 100m: 50m + 10s wall touch + 50m. Goal is to make first and second 50m Swolf match. Drill block includes paddles for the first time — 2 × 50m only, easy pace. Block 1: 4 reps with 10s pause. Block 2: 2 reps with 5s pause. Block 3: 2 full 100m (optional).',
+  nextSessionFocus: '🎯 <strong>Next session (8 May — Pool Session E):</strong> The bridge session. Broken 100m: 50m + 10s wall touch + 50m. Goal is to make first and second 50m Swolf match. Drill block includes paddles for the first time — 2 × 50m only, easy pace. Block 1: 4 reps with 10s pause. Block 2: 2 reps with 5s pause. Block 3: 2 full 100m (optional).',
 };
